@@ -48,17 +48,19 @@ function App() {
   }
 
   return (
-    <>
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/events" element={<Events events={events} />} />
-        <Route path="/add" element={<AddEvent addEvent={addEvent} />} />
-        <Route path="/manager" element={<EventManager events={events} updateEvent={updateEvent} setEvents={setEvents} />} />
-      </Routes>
+      <main className="flex-grow">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/events" element={<Events events={events} />} />
+          <Route path="/add" element={<AddEvent addEvent={addEvent} />} />
+          <Route path="/manager" element={<EventManager events={events} updateEvent={updateEvent} setEvents={setEvents} />} />
+        </Routes>
+      </main>
       <Footer />
       <ToastContainer />
-    </>
+    </div>
   );
 }
 

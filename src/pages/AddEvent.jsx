@@ -42,8 +42,8 @@ function AddEvent({ addEvent }) {
   }
 
   return (
-    <section className="bg-white dark:bg-gray-900 py-10 bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern.svg')] dark:bg-[url('https://flowbite.s3.amazonaws.com/docs/jumbotron/hero-pattern-dark.svg')]">
-
+    <div className="bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900 w-full h-full absolute top-28 pb-28 left-0 -z-10">
+    <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 z-10 relative">
     <form
       onSubmit={handleSubmit}
       className="max-w-screen-sm mx-auto p-6 bg-white mt-6 rounded shadow"
@@ -103,7 +103,8 @@ function AddEvent({ addEvent }) {
       </div>
    
     </form>
-    /</section>
+    </div>
+    </div>
   );
 }
 

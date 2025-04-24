@@ -1,4 +1,4 @@
-// components/EventList.jsx
+//All events
 function EventList({ events }) {
     const statusStyles = {
       Available: 'text-green-600 bg-green-100',
