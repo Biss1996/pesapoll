@@ -1,24 +1,24 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 
-const Navbar = ({ children }) => {
+const Navbar = () => {
+  const linkClass = ({ isActive }) =>
+    isActive
+      ? 'text-blue-600 font-semibold transition-colors'
+      : 'text-gray-700 hover:text-blue-500 transition-colors';
+
   return (
-    <>
-      <nav className="bg-white shadow-md border-b border-gray-200 px-8 py-4">
-        <div className="max-w-screen-xl mx-auto flex items-center justify-between">
-          <div>
-            <Link to="/" className="text-xl font-bold text-blue-600">Ultimate Events</Link>
-          </div>
-          <div className="flex space-x-10 text-lg font-medium text-gray-700">
-            <Link to="/" className="hover:text-blue-500 transition-colors">Home</Link>
-            <Link to="/events" className="hover:text-blue-500 transition-colors">Events</Link>
-            <Link to="/add" className="hover:text-blue-500 transition-colors">Add Event</Link>
-            <Link to="/manager" className="hover:text-blue-500 transition-colors">Event Manager</Link>
-          </div>
+    <nav className="bg-white shadow-md border-b border-gray-200 px-8 py-4">
+      <div className="max-w-screen-xl mx-auto flex items-center justify-between">
+        <NavLink to="/" className="text-xl font-bold text-blue-600">Ultimate Events</NavLink>
+        <div className="flex space-x-10 text-lg font-medium">
+          <NavLink to="/" className={linkClass}>Home</NavLink>
+          <NavLink to="/events" className={linkClass}>Events</NavLink>
+          <NavLink to="/add" className={linkClass}>Add Event</NavLink>
+          <NavLink to="/manager" className={linkClass}>Event Manager</NavLink>
         </div>
-      </nav>
-      <main>{children}</main>
-    </>
+      </div>
+    </nav>
   );
 };
 

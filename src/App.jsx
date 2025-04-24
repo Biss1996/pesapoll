@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import Home from './pages/Home';
 import Events from './pages/Events';
 import AddEvent from './pages/AddEvent';
@@ -11,7 +12,6 @@ import { useEffect, useState } from 'react';
 function App() {
   const [events, setEvents] = useState([]);
 
-  // Fetch events from db.json
   useEffect(() => {
     fetch('http://localhost:3001/events')
       .then((res) => res.json())
@@ -19,13 +19,10 @@ function App() {
       .catch(() => toast.error('Failed to fetch events'));
   }, []);
 
-  // Add event to db.json
   function addEvent(newEvent) {
     fetch('http://localhost:3001/events', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newEvent),
     })
       .then((res) => res.json())
@@ -36,18 +33,15 @@ function App() {
       .catch(() => toast.error('Failed to add event'));
   }
 
-  // Update event in db.json
   function updateEvent(updatedEvent) {
     fetch(`http://localhost:3001/events/${updatedEvent.id}`, {
       method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedEvent),
     })
       .then((res) => res.json())
       .then((data) => {
-        setEvents(events.map(event => event.id === data.id ? data : event));
+        setEvents(events.map((event) => (event.id === data.id ? data : event)));
         toast.success('Event updated successfully');
       })
       .catch(() => toast.error('Failed to update event'));
@@ -55,12 +49,14 @@ function App() {
 
   return (
     <>
+      <Navbar />
       <Routes>
-        <Route path="/" element={<Navbar><Home /></Navbar>} />
-        <Route path="/events" element={<Navbar><Events events={events} /></Navbar>} />
-        <Route path="/add" element={<Navbar><AddEvent addEvent={addEvent} /></Navbar>} />
-        <Route path="/manager" element={<Navbar><EventManager events={events} updateEvent={updateEvent} setEvents={setEvents} /></Navbar>} />
+        <Route path="/" element={<Home />} />
+        <Route path="/events" element={<Events events={events} />} />
+        <Route path="/add" element={<AddEvent addEvent={addEvent} />} />
+        <Route path="/manager" element={<EventManager events={events} updateEvent={updateEvent} setEvents={setEvents} />} />
       </Routes>
+      <Footer />
       <ToastContainer />
     </>
   );
