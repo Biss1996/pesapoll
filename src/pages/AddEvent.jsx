@@ -111,21 +111,7 @@ function AddEvent({ addEvent }) {
           </div>
         </form>
       </div>
-          <svg
-            className="w-2.5 h-2.5 ms-2 rtl:rotate-180"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 6 10"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="m1 9 4-4-4-4"
-            />
-          </svg>
+      
       </div>
       <div className="absolute inset-0 bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900 -z-10" />
     </div>

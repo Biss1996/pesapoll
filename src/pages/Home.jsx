@@ -24,21 +24,6 @@ We have lot's of new trending events that you can't afford to miss</p>
         >
           <span className="text-xs bg-blue-600 rounded-full text-white px-4 py-1.5 me-3">New</span>
           <span className="text-l text-gray-100 font-medium">Check out our new trending events!</span>
-          <svg
-            className="w-2.5 h-2.5 ms-2 rtl:rotate-180"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 6 10"
-          >
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="m1 9 4-4-4-4"
-            />
-          </svg>
         </button>
       </div>
       <div className="absolute top-0 left-0 w-full h-full z-0 bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900"></div>
