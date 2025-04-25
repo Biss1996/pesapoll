@@ -4,7 +4,7 @@ function EventManager() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:3001/events")
+    fetch("https://ultimate-events.onrender.com/events")
       .then((res) => res.json())
       .then(setEvents)
       .catch((err) => console.error("Error fetching events:", err));
@@ -20,7 +20,7 @@ function EventManager() {
 
   const handleSave = (id) => {
     const updatedEvent = events.find((ev) => ev.id === id);
-    fetch(`http://localhost:3001/events/${id}`, {
+    fetch(`https://ultimate-events.onrender.com/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -38,7 +38,7 @@ function EventManager() {
   };
 
   const handleDelete = (id) => {
-    fetch(`http://localhost:3001/events/${id}`, {
+    fetch(`https://ultimate-events.onrender.com/${id}`, {
       method: "DELETE",
     })
       .then(() => {

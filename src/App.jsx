@@ -13,14 +13,14 @@ function App() {
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    fetch('http://localhost:3001/events')
+    fetch('https://ultimate-events.onrender.com/events')
       .then((res) => res.json())
       .then((data) => setEvents(data))
       .catch(() => toast.error('Failed to fetch events'));
   }, []);
 
   function addEvent(newEvent) {
-    fetch('http://localhost:3001/events', {
+    fetch('https://ultimate-events.onrender.com/events', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newEvent),
@@ -34,7 +34,7 @@ function App() {
   }
 
   function updateEvent(updatedEvent) {
-    fetch(`http://localhost:3001/events/${updatedEvent.id}`, {
+    fetch(`https://ultimate-events.onrender.com/events/${updatedEvent.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedEvent),
