@@ -50,7 +50,14 @@ function EventManager() {
 
   return (
     <div className="bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900 w-full h-full  top-28 left-0 -z-10">
-    <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 z-10 relative">      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div className="py-8 px-4 mx-auto max-w-screen-xl text-center lg:py-16 z-10 relative">   
+    <h1 className="mb-4 text-4xl font-bold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+          Update Your Events
+        </h1>
+        <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48 dark:text-gray-200">
+        Here you can organize and manage all your events. update event details i.e Name, Venue, Date and keep track of their status.
+        </p> 
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {events.map((event) => (
           <div
             key={event.id}

@@ -44,24 +44,19 @@ function AddEvent({ addEvent }) {
 
   return (
     <div className="relative bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900 w-full min-h-screen">
-      {/* Intro Section */}
       <div className="py-8 px-4 mx-auto w-full max-w-screen-xl lg:py-16 text-center relative z-10">
-        <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-          Welcome to Ultimate Events!
+        <h1 className="mb-4 text-4xl font-bold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
+          New Events?
         </h1>
         <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48 dark:text-gray-200">
-           
+        To add a new event, please complete the form below with accurate details. Make sure to include the event name, venue, date, current status, and an image URL. This information will help users discover and stay updated on upcoming events.
         </p>
-        
-        
-          {/* <span className="text-xs bg-blue-600 rounded-full text-white px-4 py-1.5 me-3">New</span> */}
-          {/* <span className="text-l text-gray-100 font-medium">Check out our new trending events!</span> */}
-          <div className="py-8 px-4 sm:px-6 lg:px-12 xl:px-20 2xl:px-32 w-full lg:py-16 relative z-10">
+      <div className="py-8 px-4 sm:px-6 lg:px-12 xl:px-20 2xl:px-32 w-full lg:py-16 relative z-10">
         <form
           onSubmit={handleSubmit}
-          className="w-full max-w-3xl mx-auto p-6 mt-6 rounded shadow"
+          className="w-full max-w-3xl mx-auto pt-0 p-2 mt-6 rounded shadow"
         >
-          <h2 className="text-xl text-blue-600 text-center font-bold mb-4">Add New Event</h2>
+          <h2 className="text-2xl text-gray-200 text-center font-bold mb-4">Add New Event</h2>
           <div className="grid gap-4 bg-blue-300">
             <input
               type="text"
@@ -132,12 +127,6 @@ function AddEvent({ addEvent }) {
             />
           </svg>
       </div>
-  
-      {/* Form Section */}
-      
-      
-  
-      {/* Background Overlay */}
       <div className="absolute inset-0 bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900 -z-10" />
     </div>
   );
