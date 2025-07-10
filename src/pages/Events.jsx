@@ -12,23 +12,27 @@ function Events({ events }) {
   });
 
   return (
-    <div className="bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900 w-full min-h-screen pt-0 pb-0">
-      <div className="py-8 pt-0 px-4 mx-auto max-w-screen-xl text-center lg:py-16">
-        <h1 className="text-4xl mt-0 font-bold mb-4 text-center">Upcoming Events!...</h1>
-        <h2 className= "text-2xl mt-0 font-italic mb-4 text-center">From electrifying concerts to inspiring workshops, our upcoming events are packed with unforgettable experiences. Let the adventure begin!</h2>
+    <div className="w-full min-h-screen bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900 px-4 py-4">
+      <div className="max-w-screen-xl mx-auto py-4 px-2 sm:px-4">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-3">
+          Upcoming Events!...
+        </h1>
+        <h2 className="text-base sm:text-lg md:text-xl italic text-center text-gray-700 dark:text-gray-300 mb-5">
+          From electrifying concerts to inspiring workshops, our upcoming events are packed with unforgettable experiences. Let the adventure begin!
+        </h2>
 
-        <div className="flex flex-col md:flex-row justify-center gap-4 mb-0">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-center sm:gap-4 mb-6">
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search events..."
-            className="px-4 py-2 border rounded w-full md:w-1/2"
+            className="w-full sm:w-2/3 md:w-1/2 px-4 py-2 border border-gray-300 rounded text-sm"
           />
           <select
             value={filter}
             onChange={(e) => setFilter(e.target.value)}
-            className="px-4 py-2 border rounded w-full md:w-1/4"
+            className="w-full sm:w-1/3 md:w-1/4 px-4 py-2 border border-gray-300 rounded text-sm"
           >
             <option value="All">All</option>
             <option value="Available">Available</option>
@@ -38,13 +42,13 @@ function Events({ events }) {
         </div>
 
         {filteredEvents.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mt-8">
+          <div className="flex flex-col gap-4">
             {filteredEvents.map((event) => (
               <EventCard key={event.id} event={event} />
             ))}
           </div>
         ) : (
-          <p className="text-center text-gray-500">No matching events found.</p>
+          <p className="text-center text-gray-500 mt-4">No matching events found.</p>
         )}
       </div>
     </div>

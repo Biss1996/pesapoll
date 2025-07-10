@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
+import { useAdmin } from '../context/AdminContext';
+import AdminLogin from '../components/AdminLogin';
 
-function EventManager() {
+const EventManager = () => {
+  const { isAdmin } = useAdmin();
+
+  if (!isAdmin) return <AdminLogin />;
+
   const [events, setEvents] = useState([]);
 
   useEffect(() => {
@@ -68,7 +74,6 @@ function EventManager() {
                 className="w-full h-48 object-cover"
               />
               <div className="p-4">
-                
                 <input
                   className="w-full text-xl font-semibold mb-2 border-b"
                   value={event.name}
@@ -77,12 +82,19 @@ function EventManager() {
                   }
                 />
                 <input
-                  className="w-full text-sm mb-2 border-b"
-                  value={event.image}
-                  placeholder="Image"
-                  onChange={(e) =>
-                    handleChange(event.id, "image", e.target.value)
-                  }
+                  type="file"
+                  accept="image/*"
+                  className="w-full text-sm mb-2"
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    if (file) {
+                      reader.onloadend = () => {
+                        handleChange(event.id, "image", reader.result);
+                      };
+                      reader.readAsDataURL(file);
+                    }
+                  }}
                 />
                 <input
                   className="w-full border-b mb-2"
@@ -99,10 +111,28 @@ function EventManager() {
                   }
                 />
                 <input
-                  className="w-full border-b mb-4"
+                  className="w-full border-b mb-2"
+                  type="url"
+                  placeholder="Vendor Application Link"
+                  value={event.vendorLink || ''}
+                  onChange={(e) =>
+                    handleChange(event.id, 'vendorLink', e.target.value)
+                  }
+                />
+                <input
+                  className="w-full border-b mb-2"
                   value={event.status}
                   onChange={(e) =>
                     handleChange(event.id, "status", e.target.value)
+                  }
+                />
+                <textarea
+                  className="w-full border p-2 rounded mb-4"
+                  rows={3}
+                  value={event.description || ''}
+                  placeholder="Event description"
+                  onChange={(e) =>
+                    handleChange(event.id, "description", e.target.value)
                   }
                 />
                 <div className="flex justify-between">
@@ -126,6 +156,6 @@ function EventManager() {
       </div>
     </div>
   );
-}
+};
 
 export default EventManager;

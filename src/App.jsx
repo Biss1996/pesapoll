@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Navbar from './components/Navbar';
@@ -8,9 +8,13 @@ import Events from './pages/Events';
 import AddEvent from './pages/AddEvent';
 import EventManager from './pages/EventManager';
 import { useEffect, useState } from 'react';
+import SingleEvent from './pages/SingleEvent';
+import { useAdmin } from './context/AdminContext';
+import AdminLogin from './pages/AdminLogin'; 
 
 function App() {
   const [events, setEvents] = useState([]);
+  const { isAdmin } = useAdmin();
 
   useEffect(() => {
     fetch('https://ultimate-events.onrender.com/events')
@@ -54,8 +58,23 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/events" element={<Events events={events} />} />
-          <Route path="/add" element={<AddEvent addEvent={addEvent} />} />
-          <Route path="/manager" element={<EventManager events={events} updateEvent={updateEvent} setEvents={setEvents} />} />
+          <Route path="/event-details" element={<SingleEvent />} />
+          
+          {/* Admin-only routes */}
+          <Route
+            path="/add"
+            element={isAdmin ? <AddEvent addEvent={addEvent} /> : <Navigate to="/" replace />}
+          />
+          <Route
+            path="/manager"
+            element={isAdmin ? (
+              <EventManager events={events} updateEvent={updateEvent} setEvents={setEvents} />
+            ) : (
+              <Navigate to="/" replace />
+            )}
+          />
+          <Route path="/admin-login" element={<AdminLogin />} />
+
         </Routes>
       </main>
       <Footer />

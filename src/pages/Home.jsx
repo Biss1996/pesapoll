@@ -1,32 +1,179 @@
-import React from "react";
-import { useNavigate } from "react-router-dom"; 
+import React, { useRef, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 
 function Home() {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  const carouselRef = useRef();
+
+  const reviews = [
+    {
+      name: "Linda M.",
+      text: "Fantastic organization! My sales doubled thanks to this event.",
+      rating: 5,
+    },
+    {
+      name: "James K.",
+      text: "Smooth vendor process, timely updates, and great crowds.",
+      rating: 4,
+    },
+    {
+      name: "Njeri W.",
+      text: "Loved the vibe! The setup was professional and clean.",
+      rating: 5,
+    },
+    {
+      name: "Ali M.",
+      text: "More signage would help, but overall a great experience.",
+      rating: 3,
+    },
+    {
+      name: "Sasha T.",
+      text: "Definitely signing up again. Easy payments, great turnout!",
+      rating: 5,
+    },
+  ];
 
   const handleNavigate = () => {
-    navigate("/events"); 
+    navigate("/events");
   };
 
-  return (
-    <div className="relative bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900 w-full min-h-screen pt-0 pb-0">
-      <div className="py-8 pt-0 px-4 mx-auto max-w-screen-xl text-center lg:py-16 relative z-10">
-        <h1 className="mb-4 text-4xl font-extrabold tracking-tight leading-none text-gray-900 md:text-5xl lg:text-6xl dark:text-white">
-          Welcome to
-        </h1>
-        <img src="/banner2.png"  alt="banner" className="pl-0 pr-0"/>
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (carouselRef.current) {
+        const { scrollLeft, scrollWidth, clientWidth } = carouselRef.current;
+        const maxScrollLeft = scrollWidth - clientWidth;
+        if (scrollLeft >= maxScrollLeft) {
+          carouselRef.current.scrollTo({ left: 0, behavior: "smooth" });
+        } else {
+          carouselRef.current.scrollBy({ left: 300, behavior: "smooth" });
+        }
+      }
+    }, 3000);
 
-        <p className="mb-8 text-lg font-normal text-gray-500 lg:text-xl sm:px-16 lg:px-48 dark:text-gray-200">
-We have lot's of new trending events that you can't afford to miss</p>
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="relative w-full min-h-screen bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900">
+      <div className="absolute inset-0 z-0 bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900"></div>
+
+      <div className="relative z-10 px-4 py-12 max-w-7xl mx-auto text-center">
+        <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-6">
+          Discover, Connect, Celebrate
+        </h1>
+
+        <div className="flex justify-center mb-6">
+          <img
+            src="/banner3.png.jpg"
+            alt="Event banner"
+            className="w-full max-w-2xl rounded-xl shadow-md object-cover"
+          />
+        </div>
+
+        <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto mb-8">
+          Join thousands of attendees in exploring upcoming concerts, markets,
+          exhibitions, and much more. Don’t miss the opportunity to connect
+          with your community.
+        </p>
+
         <button
-          onClick={handleNavigate} 
-          className="inline-flex justify-between items-center py-1 px-1 pe-4 mb-7 text-xl text-gray-100 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300 hover:bg-gray-100 dark:hover:bg-blue-800"
+          onClick={handleNavigate}
+          className="inline-flex items-center justify-center text-sm sm:text-base px-6 py-3 rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-all font-semibold shadow-lg"
         >
-          <span className="text-xs bg-blue-600 rounded-full text-white px-4 py-1.5 me-3">New</span>
-          <span className="text-l text-gray-100 font-medium">Check out our new trending events!</span>
+          <span className="bg-white text-blue-600 font-bold text-xs px-3 py-1 rounded-full mr-2">
+            New
+          </span>
+          Explore Trending Events
         </button>
+
+        {/* Features Section */}
+        <div className="mt-16 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 text-left">
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              🎟️ Easy Booking
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300">
+              Secure your spot at events with a few clicks. No lines. No hassle.
+            </p>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              ✅ Verified Events
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300">
+              All events are curated and verified for safety and authenticity.
+            </p>
+          </div>
+
+          <div className="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-md">
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              🛍️ Vendor Opportunities
+            </h3>
+            <p className="text-gray-600 dark:text-gray-300">
+              Apply as a vendor and showcase your business at top local events.
+            </p>
+          </div>
+        </div>
+
+        {/* Upcoming Events Preview */}
+        <div className="mt-20">
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+            Upcoming Events
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 mb-6">
+            Visit the Events page for full listings.
+          </p>
+          <div className="flex flex-wrap justify-center gap-4">
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-md shadow w-full max-w-xs">
+              <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Night Market</h4>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Jul 15 · Nairobi</p>
+            </div>
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-md shadow w-full max-w-xs">
+              <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Open Mic Fest</h4>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Jul 20 · Kisumu</p>
+            </div>
+            <div className="bg-white dark:bg-gray-800 p-4 rounded-md shadow w-full max-w-xs">
+              <h4 className="text-lg font-semibold text-gray-900 dark:text-white">Art Expo 2025</h4>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Aug 3 · Mombasa</p>
+            </div>
+          </div>
+        </div>
+
+        {/* Reviews Section */}
+        <div className="mt-20 bg-white dark:bg-gray-900 py-8 rounded-lg shadow-inner">
+          <h2 className="text-2xl font-bold text-center text-gray-800 dark:text-white mb-6">
+            What Our Vendors Say
+          </h2>
+
+          <div className="overflow-x-auto px-4">
+            <div
+              ref={carouselRef}
+              className="flex gap-4 w-max mx-auto scroll-smooth"
+            >
+              {reviews.map((review, idx) => (
+                <motion.div
+                  key={idx}
+                  initial={{ opacity: 0, y: 30 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, delay: idx * 0.2 }}
+                  className="min-w-[250px] max-w-sm bg-blue-50 dark:bg-gray-800 p-4 rounded-xl shadow-md flex-shrink-0"
+                >
+                  <p className="text-gray-700 dark:text-gray-200 text-sm mb-3">
+                    "{review.text}"
+                  </p>
+                  <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
+                    <span>— {review.name}</span>
+                    <span>{"⭐".repeat(review.rating)}</span>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </div>
+        </div>
       </div>
-      <div className="absolute top-0 left-0 w-full h-full z-0 bg-gradient-to-b from-blue-50 to-transparent dark:from-blue-900"></div>
     </div>
   );
 }
