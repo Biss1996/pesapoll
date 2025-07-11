@@ -40,12 +40,18 @@ const Navbar = () => {
 
       {/* Mobile Menu */}
       {menuOpen && (
-        <div className="md:hidden px-6 pb-4 space-y-2 text-white text-lg font-medium bg-blue-700">
-          <NavLink to="/" className={linkClass} onClick={() => setMenuOpen(false)}>Home</NavLink>
-          <NavLink to="/events" className={linkClass} onClick={() => setMenuOpen(false)}>Events</NavLink>
-          {isAdmin && <NavLink to="/add" className={linkClass} onClick={() => setMenuOpen(false)}>Add Event</NavLink>}
-          {isAdmin && <NavLink to="/manager" className={linkClass} onClick={() => setMenuOpen(false)}>Event Manager</NavLink>}
-        </div>
+      <div className="md:hidden px-6 pb-4 flex flex-wrap gap-7 text-white text-lg font-medium bg-blue-700">
+  <NavLink to="/" className={linkClass} onClick={() => setMenuOpen(false)}>Home</NavLink>
+  <NavLink to="/events" className={linkClass} onClick={() => setMenuOpen(false)}>Events</NavLink>
+  {isAdmin && (
+    <NavLink to="/add" className={linkClass} onClick={() => setMenuOpen(false)}>Add Event</NavLink>
+  )}
+  {isAdmin && (
+    <NavLink to="/manager" className={linkClass} onClick={() => setMenuOpen(false)}>Event Manager</NavLink>
+  )}
+</div>
+
+
       )}
     </nav>
   );
