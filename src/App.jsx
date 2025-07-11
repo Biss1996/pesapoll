@@ -10,21 +10,21 @@ import EventManager from './pages/EventManager';
 import { useEffect, useState } from 'react';
 import SingleEvent from './pages/SingleEvent';
 import { useAdmin } from './context/AdminContext';
-import AdminLogin from './pages/AdminLogin'; 
+import AdminLogin from './pages/AdminLogin';
 
 function App() {
   const [events, setEvents] = useState([]);
   const { isAdmin } = useAdmin();
 
   useEffect(() => {
-    fetch('https://ultimate-events.onrender.com/events')
+    fetch('https://ultimate-vendors.onrender.com/events')
       .then((res) => res.json())
       .then((data) => setEvents(data))
       .catch(() => toast.error('Failed to fetch events'));
   }, []);
 
   function addEvent(newEvent) {
-    fetch('https://ultimate-events.onrender.com/events', {
+    fetch('https://ultimate-vendors.onrender.com/events', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(newEvent),
@@ -38,7 +38,7 @@ function App() {
   }
 
   function updateEvent(updatedEvent) {
-    fetch(`https://ultimate-events.onrender.com/events/${updatedEvent.id}`, {
+    fetch(`https://ultimate-vendors.onrender.com/events/${updatedEvent.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedEvent),
@@ -59,7 +59,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/events" element={<Events events={events} />} />
           <Route path="/event-details" element={<SingleEvent />} />
-          
+
           {/* Admin-only routes */}
           <Route
             path="/add"
@@ -74,7 +74,6 @@ function App() {
             )}
           />
           <Route path="/admin-login" element={<AdminLogin />} />
-
         </Routes>
       </main>
       <Footer />
