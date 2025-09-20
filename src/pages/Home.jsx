@@ -1,6 +1,5 @@
-import React, { useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import { motion } from "framer-motion";
+import React from "react";
+
 export default function Home() {
   return (
     <>
@@ -16,13 +15,13 @@ export default function Home() {
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <a
-              href="#get-started"
+              href="/register"
               className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl bg-indigo-600 px-5 py-3 text-white font-semibold shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
               Start Earning Now
             </a>
             <a
-              href="#login"
+              href="/login"
               className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl border border-slate-300 px-5 py-3 font-semibold text-slate-700 hover:bg-white shadow-sm"
             >
               Already a Member? Login
@@ -38,7 +37,14 @@ export default function Home() {
           <dl className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
             <Stat value="50K+" label="Active Users" />
             <Stat value="$2M+" label="Total Payouts" />
-            <Stat value="4.9★" label="User Rating" />
+            <Stat
+              value={
+                <span>
+                  4.9<span className="text-yellow-400">★</span>
+                </span>
+              }
+              label="User Rating"
+            />
           </dl>
         </div>
       </section>
@@ -46,29 +52,85 @@ export default function Home() {
       {/* Why Choose */}
       <section id="features" className="py-14 lg:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-2xl sm:text-3xl font-extrabold tracking-tight">
+          <h2 className="text-center text-indigo-600 text-2xl sm:text-3xl font-extrabold tracking-tight">
             Why Choose Attapoll Survey?
           </h2>
 
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            <Feature icon={<Dollar />} title="High Paying Surveys" desc="Earn $0.50–$5+ per survey, among the best rates in the industry." />
-            <Feature icon={<Users />} title="25% Referral Commission" desc="Earn lifetime commissions from your referrals." />
-            <Feature icon={<Zap />} title="Instant Payouts" desc="Get paid within 24 hours—no waiting." />
-            <Feature icon={<NoThreshold />} title="No Minimum Threshold" desc="Withdraw any amount, anytime." />
-            <Feature icon={<Shield />} title="100% Legitimate" desc="Trusted by 50,000+ users worldwide." />
-            <Feature icon={<Star />} title="4.9★ Rating" desc="Rated excellent by our community." />
-          </div>
+  <Feature icon={<Dollar />} title={<span className="text-green-600">High Paying Surveys</span>} desc="Earn Kes 50 – Kes 100 per survey, among the best rates in the industry." />
+  <Feature icon={<Users />} title={<span className="text-green-600">Referral Commission</span>} desc="Earn lifetime commissions from your referrals." />
+  <Feature icon={<Zap />} title={<span className="text-green-600">Instant Payouts</span>} desc="Get paid to M-Pesa within 24 hours—no waiting." />
+  <Feature icon={<NoThreshold />} title={<span className="text-green-600">No Minimum Threshold</span>} desc="Withdraw any amount, anytime." />
+  <Feature icon={<Shield />} title={<span className="text-green-600">100% Legitimate</span>} desc="Trusted by 50,000+ users worldwide." />
+  <Feature icon={<Star />} title={<span className="text-green-600">4.9★ Rating</span>} desc="Rated excellent by our community." />
+</div>
+
         </div>
       </section>
 
       {/* Success Stories */}
-      <section id="stories" className="bg-indigo-50 py-14 lg:py-20">
+      <section id="stories" className="relative py-16 sm:py-20">
+        {/* soft gradient glow */}
+        <div
+          className="pointer-events-none absolute inset-x-0 -top-12 h-40 -z-10 bg-gradient-to-r from-indigo-100/70 via-fuchsia-100/60 to-sky-100/70 blur-2xl"
+          aria-hidden="true"
+        />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center text-2xl sm:text-3xl font-extrabold tracking-tight">Success Stories</h2>
-          <div className="mt-10 grid grid-cols-1 md:grid-cols-3 gap-6">
-            <Testimonial name="Sarah Mwanza" amount="Kes 2,000" quote="Attapoll Survey changed my life! I earn 2000+ shillings weekly doing easy surveys." />
-            <Testimonial name="John Kinyua" amount="Kes 4,500" quote="I'm so glad I found this. The extra income has helped me pay my bills!" />
-            <Testimonial name="Maria Lemayan" amount="Kes 3,000" quote="As a student, this is perfect. I work whenever I want and get paid instantly!" />
+          <div className="text-center">
+            <span className="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-indigo-200">
+              Real people. Real payouts.
+            </span>
+            <h2 className="mt-4 text-3xl sm:text-4xl font-extrabold tracking-tight text-slate-900">
+              Success Stories
+            </h2>
+            <p className="mt-2 text-sm sm:text-base text-slate-600">
+              What members in Kenya say about Attapoll Survey.
+            </p>
+          </div>
+
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {/* Card 1 */}
+            <div className="group relative overflow-hidden rounded-2xl bg-white/90 p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg">
+              <div className="absolute inset-x-0 top-0 h-1.5 rounded-t-2xl bg-gradient-to-r from-indigo-600 via-fuchsia-500 to-sky-500" />
+              <div className="mb-3 flex items-center gap-1 text-yellow-400" aria-hidden="true">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span className="opacity-70">★</span>
+                <span className="ml-2 text-xs font-semibold text-slate-500">4.9/5</span>
+              </div>
+              <Testimonial
+                name="Sarah Mwanza"
+                nameClassName="text-indigo-600"
+                amount="Kes 2,000"
+                quote="Attapoll Survey changed my life! I earn 2000+ shillings weekly doing easy surveys."
+              />
+            </div>
+
+            {/* Card 2 */}
+            <div className="group relative overflow-hidden rounded-2xl bg-white/90 p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg">
+              <div className="absolute inset-x-0 top-0 h-1.5 rounded-t-2xl bg-gradient-to-r from-indigo-600 via-fuchsia-500 to-sky-500" />
+              <div className="mb-3 flex items-center gap-1 text-yellow-400" aria-hidden="true">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span className="opacity-70">★</span>
+                <span className="ml-2 text-xs font-semibold text-slate-500">4.8/5</span>
+              </div>
+              <Testimonial
+                name="John Kinyua"
+                amount="Kes 4,500"
+                quote="I'm so glad I found this. The extra income has helped me pay my bills!"
+              />
+            </div>
+
+            {/* Card 3 */}
+            <div className="group relative overflow-hidden rounded-2xl bg-white/90 p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg">
+              <div className="absolute inset-x-0 top-0 h-1.5 rounded-t-2xl bg-gradient-to-r from-indigo-600 via-fuchsia-500 to-sky-500" />
+              <div className="mb-3 flex items-center gap-1 text-yellow-400" aria-hidden="true">
+                <span>★</span><span>★</span><span>★</span><span>★</span><span className="opacity-70">★</span>
+                <span className="ml-2 text-xs font-semibold text-slate-500">4.9/5</span>
+              </div>
+              <Testimonial
+                name="Maria Lemayan"
+                amount="Kes 3,000"
+                quote="As a student, this is perfect. I work whenever I want and get paid instantly!"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -76,9 +138,9 @@ export default function Home() {
       {/* Final CTA */}
       <section id="cta" className="py-16">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-2xl sm:text-3xl font-extrabold tracking-tight">Ready to Start Earning?</h2>
+          <h2 className="text-2xl sm:text-3xl text-indigo-600 font-extrabold tracking-tight">Ready to Start Earning?</h2>
           <a
-            href="#get-started"
+            href="/register"
             className="mt-6 inline-flex items-center justify-center rounded-2xl bg-indigo-600 px-6 py-3 text-white font-semibold shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
             Join Now — It's Free!
@@ -111,17 +173,22 @@ function Feature({ icon, title, desc }) {
     </div>
   );
 }
-function Testimonial({ name, amount, quote }) {
+
+function Testimonial({ name, amount, quote, nameClassName = "text-slate-900" }) {
+  const full = String(name ?? "");
+  const parts = full.trim().split(/\s+/);
+  const initials =
+    (parts[0]?.[0] ?? "") + (parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? "") : "");
+
   return (
-    <figure className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
+    <figure>
       <div className="flex items-center gap-3">
         <span className="h-10 w-10 rounded-full bg-indigo-600/90 text-white grid place-items-center font-semibold">
-          {name.split(' ')[0][0]}
-          {name.split(' ').slice(-1)[0][0]}
+          {initials}
         </span>
         <figcaption>
-          <p className="font-semibold leading-tight">{name}</p>
-          <p className="text-sm text-slate-600">Earned: {amount}</p>
+          <p className={`font-semibold text-green-400 leading-tight ${nameClassName}`}>{full}</p>
+          {amount && <p className="text-sm text-slate-600">Earned: {amount}</p>}
         </figcaption>
       </div>
       <blockquote className="mt-3 text-sm text-slate-700">“{quote}”</blockquote>

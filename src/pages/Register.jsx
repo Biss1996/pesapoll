@@ -13,7 +13,7 @@ const DB_URL =
 
 const USERS_KEY = "app:users";
 const USER_KEY  = "app:user";
-const REDIRECT_TO = "/home"; // change to "/login" if you prefer
+const REDIRECT_TO = "/login"; // change to "/login" if you prefer
 
 export default function Register() {
   const navigate = useNavigate();
