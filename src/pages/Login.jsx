@@ -100,73 +100,93 @@ export default function Login() {
   }
 
   return (
-    <section className="w-full bg-indigo-50/50">
-      <div className="min-h-[calc(100vh-64px)] container mx-auto px-4 py-10 flex items-center justify-center">
-        <div className="w-full max-w-md rounded-2xl bg-white p-6 sm:p-8 shadow-sm ring-1 ring-slate-200">
-          <div className="mx-auto mb-2 h-12 w-12 rounded-full bg-indigo-100 text-indigo-700 grid place-items-center">
-            <LoginIcon className="h-6 w-6" />
+    <div className="min-h-screen bg-indigo-50/50 flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-md rounded-2xl bg-white p-6 sm:p-8 shadow-sm ring-1 ring-slate-200">
+        {/* Icon */}
+        <div className="mx-auto mb-2 h-12 w-12 rounded-full bg-indigo-100 text-indigo-700 grid place-items-center">
+          <LoginIcon className="h-6 w-6" />
+        </div>
+
+        <h1 className="text-center text-2xl sm:text-3xl font-extrabold tracking-tight">
+          Welcome Back
+        </h1>
+        <p className="mt-1 text-center text-sm text-slate-600">
+          Login to access your earnings
+        </p>
+
+        <form onSubmit={onSubmit} className="mt-6 space-y-4">
+          {/* Email */}
+          <div>
+            <label htmlFor="email" className="sr-only">Email Address</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              placeholder="Email Address *"
+              value={form.email}
+              onChange={onChange}
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              aria-invalid={!!errors.email}
+            />
+            {errors.email && <p className="mt-1 text-xs text-rose-600">{errors.email}</p>}
           </div>
 
-          <h1 className="text-center text-3xl font-extrabold tracking-tight">Welcome Back</h1>
-          <p className="mt-1 text-center text-sm text-slate-600">Login to access your earnings</p>
-
-          <form onSubmit={onSubmit} className="mt-6 space-y-4">
-            <div>
-              <label htmlFor="email" className="sr-only">Email Address</label>
-              <input
-                id="email" name="email" type="email" placeholder="Email Address *"
-                value={form.email} onChange={onChange}
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
-                aria-invalid={!!errors.email}
-              />
-              {errors.email && <p className="mt-1 text-xs text-rose-600">{errors.email}</p>}
-            </div>
-
-            <div className="relative">
-              <label htmlFor="password" className="sr-only">Password</label>
-              <input
-                id="password" name="password" type={showPwd ? "text" : "password"} placeholder="Password *"
-                value={form.password} onChange={onChange}
-                className="w-full rounded-xl border border-slate-300 px-4 py-3 pr-11 text-blue-600 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
-                aria-invalid={!!errors.password}
-              />
-              <button
-                type="button" onClick={() => setShowPwd((s) => !s)}
-                className="absolute inset-y-0 right-3 my-auto h-8 w-8 grid place-items-center text-slate-500 hover:text-slate-700"
-                aria-label={showPwd ? "Hide password" : "Show password"}
-              >
-                {showPwd ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
-              </button>
-              {errors.password && <p className="mt-1 text-xs text-rose-600">{errors.password}</p>}
-            </div>
-
-            {serverErr && <p className="text-sm text-rose-600">{serverErr}</p>}
-
-            <div className="text-right">
-              <Link to="/forgot" className="text-sm text-indigo-700 hover:underline">
-                Forgot password?
-              </Link>
-            </div>
-
+          {/* Password */}
+          <div className="relative">
+            <label htmlFor="password" className="sr-only">Password</label>
+            <input
+              id="password"
+              name="password"
+              type={showPwd ? "text" : "password"}
+              placeholder="Password *"
+              value={form.password}
+              onChange={onChange}
+              className="w-full rounded-xl border border-slate-300 px-4 py-3 pr-11 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-600"
+              aria-invalid={!!errors.password}
+            />
             <button
-              type="submit"
-              disabled={submitting || !seeded}
-              className="mt-2 w-full rounded-2xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white tracking-wide uppercase shadow-sm hover:bg-indigo-700 disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              type="button"
+              onClick={() => setShowPwd((s) => !s)}
+              className="absolute inset-y-0 right-3 my-auto h-8 w-8 grid place-items-center text-slate-500 hover:text-slate-700"
+              aria-label={showPwd ? "Hide password" : "Show password"}
             >
-              {submitting ? "LOGGING IN…" : "LOGIN TO ACCOUNT"}
+              {showPwd ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
             </button>
-          </form>
+            {errors.password && <p className="mt-1 text-xs text-rose-600">{errors.password}</p>}
+          </div>
 
-          <p className="mt-6 text-center text-sm text-slate-600">
-            Don&apos;t have an account?{" "}
-            <Link to="/register" className="text-indigo-700 font-semibold hover:underline">
-              Create one here
+          {/* Server error */}
+          {serverErr && <p className="text-sm text-rose-600">{serverErr}</p>}
+
+          {/* Forgot link */}
+          <div className="text-right">
+            <Link to="/forgot" className="text-sm text-indigo-700 hover:underline">
+              Forgot password?
             </Link>
-          </p>
-          <p className="mt-2 text-center text-xs text-slate-500">New users get a $5 signup bonus!</p>
-        </div>
+          </div>
+
+          {/* Submit */}
+          <button
+            type="submit"
+            disabled={submitting || !seeded}
+            className="mt-2 w-full rounded-2xl bg-indigo-600 px-5 py-3 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+          >
+            {submitting ? "LOGGING IN…" : "LOGIN TO ACCOUNT"}
+          </button>
+        </form>
+
+        {/* Register link */}
+        <p className="mt-6 text-center text-sm text-slate-600">
+          Don&apos;t have an account?{" "}
+          <Link to="/register" className="text-indigo-700 font-semibold hover:underline">
+            Create one here
+          </Link>
+        </p>
+        <p className="mt-2 text-center text-xs text-slate-500">
+          New users get a $5 signup bonus!
+        </p>
       </div>
-    </section>
+    </div>
   );
 }
 
