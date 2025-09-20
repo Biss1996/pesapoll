@@ -31,14 +31,14 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "4b94a505-c330-4a12-933d-97e0ed8afce7",
       "name": "Mobile Usage Habits",
       "description": "Understand how you use your smartphone day-to-day.",
-      "payout": 120,
+      "payout": 30,
       "currency": "ksh",
       "premium": true,
       "status": "active",
@@ -64,8 +64,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "airtel-kenya-10q",
@@ -174,8 +174,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "infotrack-14q",
@@ -318,8 +318,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "nation-media-11q",
@@ -436,8 +436,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "tech-gadgets-8q",
@@ -523,8 +523,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "cloud-services-9q",
@@ -620,8 +620,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "digital-skills-8q",
@@ -705,8 +705,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "ecommerce-6q",
@@ -778,8 +778,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "cybersecurity-8q",
@@ -861,8 +861,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "fintech-8q",
@@ -946,8 +946,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "ai-adoption-8q",
@@ -1032,8 +1032,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "it-jobs-6q",
@@ -1102,8 +1102,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "digital-gov-7q",
@@ -1179,8 +1179,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "safaricom-13q",
@@ -1317,8 +1317,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "mpesa-10q",
@@ -1423,8 +1423,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "local-it-6q",
@@ -1491,8 +1491,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "telecom-13q",
@@ -1628,8 +1628,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "digital-payments-6q",
@@ -1695,8 +1695,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "mobile-apps-7q",
@@ -1773,8 +1773,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "streaming-9q",
@@ -1869,8 +1869,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "tech-hardware-7q",
@@ -1948,8 +1948,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "gaming-10q",
@@ -2053,8 +2053,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "social-media-8q",
@@ -2138,8 +2138,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "internet-8q",
@@ -2228,8 +2228,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "digital-literacy-7q",
@@ -2306,8 +2306,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "tech-policy-5q",
@@ -2362,8 +2362,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "work-tech-7q",
@@ -2439,8 +2439,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "tech-startups-7q",
@@ -2515,8 +2515,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     },
     {
       "id": "20760f51-387a-4a38-b6ff-f6f6c628d3bc",
@@ -2544,8 +2544,8 @@
           ]
         }
       ],
-      "createdAt": 1758392892737,
-      "updatedAt": 1758392892737
+      "createdAt": 1758402356709,
+      "updatedAt": 1758402356709
     }
   ]
 }

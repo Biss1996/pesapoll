@@ -98,7 +98,7 @@ export default function Home() {
               </div>
               <Testimonial
                 name="Sarah Mwanza"
-                nameClassName="text-indigo-600"
+                nameClassName="text-green-600"
                 amount="Kes 2,000"
                 quote="Attapoll Survey changed my life! I earn 2000+ shillings weekly doing easy surveys."
               />
@@ -113,6 +113,8 @@ export default function Home() {
               </div>
               <Testimonial
                 name="John Kinyua"
+                nameClassName="text-green-600"
+
                 amount="Kes 4,500"
                 quote="I'm so glad I found this. The extra income has helped me pay my bills!"
               />
@@ -127,6 +129,7 @@ export default function Home() {
               </div>
               <Testimonial
                 name="Maria Lemayan"
+                nameClassName="text-green-600"
                 amount="Kes 3,000"
                 quote="As a student, this is perfect. I work whenever I want and get paid instantly!"
               />

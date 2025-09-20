@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { getCurrentUser, isAdmin as getIsAdmin, logout, AUTH_KEYS } from "../lib/auth";
-import { KEYS } from "../lib/surveys";
+import { USER_KEY } from "../lib/surveys";
 
 export default function Navbar() {
   const [user, setUser] = useState(() => getCurrentUser());
@@ -14,7 +14,7 @@ export default function Navbar() {
   useEffect(() => {
     const onStorage = (e) => {
       if (!e) return;
-      if (e.key === AUTH_KEYS?.AUTH_VERSION_KEY || e.key === KEYS?.USER_KEY) {
+      if (e.key === AUTH_KEYS?.AUTH_VERSION_KEY || e.key === USER_KEY) {
         setUser(getCurrentUser());
       }
     };
@@ -29,7 +29,7 @@ export default function Navbar() {
   }, []);
 
   const signedIn = !!user;
-  const isAdmin = getIsAdmin();
+  const isAdmin = getIsAdmin?.(user) ?? getIsAdmin?.();
 
   const handleLogout = () => {
     logout();
@@ -58,15 +58,19 @@ export default function Navbar() {
             Surveys
           </NavLink>
 
+          {/* Renamed Success Stories -> Home */}
+          <NavLink
+            to="/success-stories"
+            active={loc.pathname.startsWith("/success-stories")}
+          >
+            Home
+          </NavLink>
+
           {signedIn && (
             <NavLink to="/dashboard" active={loc.pathname.startsWith("/dashboard")}>
               Dashboard
             </NavLink>
           )}
-
-          <a href="#stories" className="hover:text-indigo-600 transition-colors">
-            Success Stories
-          </a>
 
           {isAdmin && (
             <NavLink to="/admin" active={loc.pathname.startsWith("/admin")}>
@@ -116,15 +120,16 @@ export default function Navbar() {
               Surveys
             </MobileLink>
 
+            {/* Renamed Success Stories -> Home */}
+            <MobileLink to="/success-stories" onClick={() => setOpen(false)}>
+              Home
+            </MobileLink>
+
             {signedIn && (
               <MobileLink to="/dashboard" onClick={() => setOpen(false)}>
                 Dashboard
               </MobileLink>
             )}
-
-            <a href="#stories" className="py-1.5" onClick={() => setOpen(false)}>
-              Success Stories
-            </a>
 
             {isAdmin && (
               <MobileLink to="/admin" onClick={() => setOpen(false)}>
@@ -173,11 +178,7 @@ function NavLink({ to, active, children }) {
 
 function MobileLink({ to, children, onClick }) {
   return (
-    <Link
-      to={to}
-      onClick={onClick}
-      className="py-1.5 rounded-md px-2 hover:bg-slate-50"
-    >
+    <Link to={to} onClick={onClick} className="py-1.5 rounded-md px-2 hover:bg-slate-50">
       {children}
     </Link>
   );

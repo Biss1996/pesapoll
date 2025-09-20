@@ -129,13 +129,14 @@ export default function TakeSurvey() {
               {(q.options || []).map((opt, i) => (
                 <label key={`${q.id}_${i}`} className="flex items-center gap-2 cursor-pointer">
                   <input
-                    type="radio"
-                    name={`q_${q.id}`}              // group by question
-                    checked={answers[q.id] === opt}
-                    onChange={() => setAnswers((a) => ({ ...a, [q.id]: opt }))}
-                    className="h-4 w-4 accent-indigo-600"
-                    required
-                  />
+  type="radio"
+  name={`q_${q.id}`} // group by question
+  checked={answers[q.id] === opt}
+  onChange={() => setAnswers((a) => ({ ...a, [q.id]: opt }))}
+className={`h-4 w-4 ${answers[q.id] === opt ? "accent-indigo-600" : "accent-gray-300"}`}
+  required
+/>
+
                   <span>{opt}</span>
                 </label>
               ))}
