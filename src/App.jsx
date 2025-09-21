@@ -3,7 +3,7 @@ import { Route, Routes, Navigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAdmin } from "./context/AdminContext";
 
 import Navbar from "./components/Navbar";
@@ -38,6 +38,61 @@ function ProtectedRoute({ children }) {
 const API_BASE = import.meta.env.BASE_URL || "/";
 const SURVEYS_URL = `${API_BASE.replace(/\/+$/, "")}/db.json`;
 
+/* ---------- Randomized "Withdrawal" toast helpers ---------- */
+const kesFmt = new Intl.NumberFormat("en-KE", {
+  style: "currency",
+  currency: "KES",
+  maximumFractionDigits: 0,
+});
+const ri = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+const pick = (arr) => arr[ri(0, arr.length - 1)];
+
+function randomMaskedMsisdn() {
+  // e.g., 2547XX****901
+  const last3 = String(ri(0, 999)).padStart(3, "0");
+  const mid = pick(["XX", "XY", "XZ", "9X"]);
+  return `2547${mid}****${last3}`;
+}
+function randomAmount() {
+  // bias towards common-looking amounts like 2,500
+  const base = ri(10, 100) * 50; // 500..5000 step 50
+  return pick([2500, base, base]);
+}
+function randomRef() {
+  // Looks like TX9018EF
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const d = () => ri(0, 9);
+  const L = () => letters[ri(0, letters.length - 1)];
+  return `TX${d()}${d()}${d()}${d()}${L()}${L()}`;
+}
+function pushRandomWithdrawalToast() {
+  const msisdn = randomMaskedMsisdn();
+  const amount = randomAmount();
+  const balance = ri(50, 800); // small realistic balance
+  const ref = randomRef();
+
+  toast(
+    <div className="rounded-xl">
+      <div className="text-slate-900 font-bold">Withdrawal</div>
+      <div className="mt-1 text-slate-700">
+        <span className="font-mono tracking-tight">{msisdn}</span> has withdrawn{" "}
+        <span className="font-semibold">{kesFmt.format(amount)}</span>.{" "}
+        New balance: <span className="font-semibold">{kesFmt.format(balance)}</span>.{" "}
+        Ref. <span className="font-mono">{ref}</span>
+      </div>
+    </div>,
+    {
+      // subtle border & bg similar to your screenshot
+      className:
+        "rounded-xl border border-amber-200 shadow-lg bg-white !text-slate-800",
+      autoClose: 4500,
+      closeOnClick: true,
+      pauseOnHover: true,
+      hideProgressBar: true,
+    }
+  );
+}
+
 function App() {
   // Admin-facing surveys state (for manager page)
   const [surveysAdmin, setSurveysAdmin] = useState([]);
@@ -53,6 +108,21 @@ function App() {
         setSurveysAdmin(list);
       })
       .catch(() => toast.error("Failed to fetch surveys"));
+  }, []);
+
+  /* ---------- GLOBAL random withdrawal toasts (every 8s, tab visible) ---------- */
+  const startedRef = useRef(false);
+  useEffect(() => {
+    if (startedRef.current) return; // prevent duplicate intervals in StrictMode dev
+    startedRef.current = true;
+
+    const tick = () => {
+      if (document.visibilityState === "visible") {
+        pushRandomWithdrawalToast();
+      }
+    };
+    const id = setInterval(tick, 15000);
+    return () => clearInterval(id);
   }, []);
 
   /* ---------- Admin actions (require a real API; Option A won't persist) ---------- */
@@ -164,7 +234,9 @@ function App() {
       </main>
 
       <Footer />
-      <ToastContainer />
+
+      {/* Global toast container (top-right) */}
+      <ToastContainer position="top-right" autoClose={4500} hideProgressBar />
     </div>
   );
 }
