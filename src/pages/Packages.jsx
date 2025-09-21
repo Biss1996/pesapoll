@@ -23,26 +23,42 @@ function updateUserLocal(id, partial) {
     localStorage.setItem(USER_KEY, JSON.stringify({ ...cur, ...partial }));
   }
 }
+// Reusable pill with emoji
+const TIER_META = {
+  free:     { emoji: "🆓",  classes: "bg-green-100 text-green-800" },
+  silver:   { emoji: "🥈",  classes: "bg-slate-100 text-slate-700 border border-slate-300" },
+  gold:     { emoji: "🥇",  classes: "bg-amber-100 text-amber-800" },
+  platinum: { emoji: "💎",  classes: "bg-violet-100 text-violet-800" },
+};
 
+function TierPill({ tier, label }) {
+  const t = TIER_META[tier] ?? TIER_META.free;
+  return (
+    <span className={`inline-flex items-center gap-1.5 rounded-full text-sm font-semibold px-3 py-1 ${t.classes}`}>
+      <span aria-hidden="true">{t.emoji}</span>
+      <span>{label}</span>
+    </span>
+  );
+}
 /* ---------- Plans ---------- */
 const PLANS = [
   {
     id: "free",
-    name: "Starter",
+    name: <TierPill tier="free" label="Free" />,
     priceKsh: 0,
     tier: "free",
-    badge: "Get Started",
+    badge: "Starter",
     features: [
       { k: "Surveys per day", v: "1" },
-      { k: "Earnings per month", v: "Ksh 0" },
-      { k: "Daily income", v: "Ksh 0" },
+      { k: "Earnings per month", v: "Ksh 3000" },
+      { k: "Daily income", v: "Ksh 130" },
       { k: "Minimum withdrawals", v: "Ksh 4500" },
       { k: "Earnings per survey", v: "Ksh 40 – 50" },
     ],
   },
   {
     id: "silver",
-    name: "Silver",
+    name: <TierPill tier="silver" label="Silver" />,
     priceKsh: 200,
     tier: "silver",
     features: [
@@ -55,7 +71,7 @@ const PLANS = [
   },
   {
     id: "gold",
-    name: "Gold",
+    name: <TierPill tier="gold" label="Gold" />,
     priceKsh: 400,
     tier: "gold",
     badge: "Most Popular",
@@ -69,7 +85,7 @@ const PLANS = [
   },
   {
     id: "platinum",
-    name: "Platinum",
+    name: <TierPill tier="platinum" label="Platinum" />,
     priceKsh: 800,
     tier: "platinum",
     features: [
@@ -81,6 +97,8 @@ const PLANS = [
     ],
   },
 ];
+
+
 
 export default function Packages() {
   const navigate = useNavigate();
@@ -272,7 +290,7 @@ function MpesaModal({ open, amount, plan, onClose, onVerify }) {
       >
         <div className="flex flex-col sm:flex-row gap-4">
           {/* Selected Plan Section */}
-          <div className="flex-1 p-4 border rounded-lg bg-slate-100">
+          <div className="flex-1 p-4 border rounded-lg bg-indigo-400">
             <h3 className="text-lg text-gray-950 font-semibold mb-4">Selected Plan</h3>
             <ul className="space-y-2">
               <li className="flex items-center gap-2">
@@ -461,7 +479,7 @@ function ValidationModal({ open, amount, plan, onClose, onSuccess }) {
         <textarea
           value={message}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="e.g., TIH9AQ1T8F Confirmed. Ksh400.00 paid to TRAJON ENTERTAINMENT. on 17/9/25 at 12:39 PM..."
+          placeholder="Paste your M-PESA message here."
           className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
           rows={5}
         />

@@ -1,13 +1,11 @@
 // src/components/SurveyCard.jsx
 import { useMemo, useEffect, useState } from "react";
 
-// absolute URL to the db.json built by seed.py
 const DB_URL =
   typeof document !== "undefined"
     ? new URL("db.json", document.baseURI).toString()
     : "/db.json";
 
-// tiny in-memory cache so we fetch db.json only once
 let catalogPromise = null;
 function loadCatalog() {
   if (!catalogPromise) {
@@ -25,19 +23,18 @@ export default function SurveyCard({ survey, onStart }) {
   const {
     id,
     name,
-    title, // fallback if some entries use "title"
-    questions, // may be an array or a number
-    questionsCount: qc, // optional numeric count
+    title,
+    questions,
+    questionsCount: qc,
     payout,
     currency = "ksh",
     premium,
-    completed, // from listSurveysForUser()
-    locked: lockedFromData, // any hard lock passed from data
+    completed,
+    locked: lockedFromData,
   } = survey || {};
 
   const [fallback, setFallback] = useState(null);
 
-  // If payout / question count are missing, look them up from seed.py -> db.json
   useEffect(() => {
     const needPayout = !(Number.isFinite(payout));
     const haveQ =
@@ -47,34 +44,29 @@ export default function SurveyCard({ survey, onStart }) {
       Array.isArray(survey?.items);
 
     if (!id) return;
-    if (!needPayout && haveQ) return; // we already have enough info
+    if (!needPayout && haveQ) return;
 
     loadCatalog()
       .then((list) => {
         const found = list.find((s) => s.id === id);
         if (found) setFallback(found);
       })
-      .catch(() => {
-        // ignore — just render what we have
-      });
+      .catch(() => {});
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, payout, questions, qc, survey?.items]);
 
   const displayName = name || title || fallback?.name || "Survey";
-
   const currencyLabel = String(currency || fallback?.currency || "ksh").toLowerCase();
 
-  // Always render a number for questions count
   const questionsCount = useMemo(() => {
     if (Array.isArray(questions)) return questions.length;
     if (typeof qc === "number") return qc;
     if (typeof questions === "number") return questions;
-    if (Array.isArray(survey?.items)) return survey.items.length;   // ← from seed.py
-    if (Array.isArray(fallback?.items)) return fallback.items.length; // ← fallback from db.json
+    if (Array.isArray(survey?.items)) return survey.items.length;
+    if (Array.isArray(fallback?.items)) return fallback.items.length;
     return 0;
   }, [questions, qc, survey?.items, fallback?.items]);
 
-  // Effective payout (prefer prop, else fallback from db.json)
   const effectivePayout = useMemo(() => {
     if (Number.isFinite(payout)) return payout;
     if (Number.isFinite(fallback?.payout)) return Number(fallback.payout);
@@ -83,19 +75,17 @@ export default function SurveyCard({ survey, onStart }) {
 
   const isCompleted = !!completed;
 
-  // Is user premium?
   const isPremiumLockedForUser = useMemo(() => {
     try {
       const u = JSON.parse(localStorage.getItem("app:user") || "null");
-      const isPremiumUser = !!u && (u.plan === "premium" || u.tier === "premium");
-      return !!premium && !isPremiumUser; // true = needs upgrade
+      const isPremiumUser =
+        !!u && (u.plan === "premium" || ["gold", "silver", "platinum"].includes(u.tier));
+      return !!premium && !isPremiumUser;
     } catch {
-      return !!premium; // safest default
+      return !!premium;
     }
   }, [premium]);
 
-  // 🚫 Disable ONLY when completed or explicitly locked by data.
-  // Premium surveys remain clickable so we can prompt upgrade.
   const isDisabled = isCompleted || !!lockedFromData;
 
   const buttonLabel = isCompleted
@@ -111,24 +101,32 @@ export default function SurveyCard({ survey, onStart }) {
     : `Start ${displayName}`;
 
   const handleClick = () => {
-    if (isDisabled) return; // guard
-    onStart?.({ ...fallback, ...survey }); // pass merged info if needed
+    if (isDisabled) return;
+    onStart?.({ ...fallback, ...survey });
   };
 
   return (
-    <div className="rounded-2xl bg-white ring-1 ring-slate-200 p-4 sm:p-5 flex items-center justify-between gap-4 shadow-sm hover:shadow-md transition">
-      {/* Left: title + badges */}
+    <div
+      className="relative rounded-2xl bg-white ring-1 ring-slate-200 p-4 sm:p-5
+                 flex items-center justify-between gap-4 shadow-sm hover:shadow-md transition"
+    >
+      {/* Top-right Premium badge (always visible if premium) */}
+      {premium && (
+        <span
+          className="pointer-events-none absolute top-3 right-3 z-10 inline-flex items-center gap-1
+                     rounded-full bg-violet-100 text-violet-700 text-xs font-semibold px-2 py-0.5
+                     ring-1 ring-violet-200 shadow-sm"
+        >
+          <LockIcon className="h-3.5 w-3.5" /> Premium
+        </span>
+      )}
+
+      {/* Left: title + status */}
       <div className="min-w-0">
         <div className="inline-flex items-center gap-2">
           <div className="inline-flex items-center rounded-full bg-slate-100 text-slate-800 font-semibold px-3 py-1">
             {displayName}
           </div>
-
-          {premium && (
-            <span className="inline-flex items-center gap-1 rounded-full bg-violet-100 text-violet-700 text-xs font-semibold px-2 py-0.5 ring-1 ring-violet-200">
-              <LockIcon className="h-3.5 w-3.5" /> Premium
-            </span>
-          )}
 
           {isCompleted && (
             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 text-emerald-700 text-xs font-semibold px-2 py-0.5 ring-1 ring-emerald-200">
@@ -154,7 +152,7 @@ export default function SurveyCard({ survey, onStart }) {
         </div>
       </div>
 
-      {/* Right: CTA — not disabled for premium; we want to trigger upgrade modal */}
+      {/* Right: CTA */}
       <button
         type="button"
         onClick={handleClick}
