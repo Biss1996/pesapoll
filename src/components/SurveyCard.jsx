@@ -157,7 +157,7 @@ export default function SurveyCard({ survey, onStart }) {
         type="button"
         onClick={handleClick}
         disabled={isDisabled}
-        className={`shrink-0 rounded-full px-5 py-2 font-semibold transition shadow
+        className={`shrink-1 absolute-bottom-right  rounded-full px-1 py-1 font-semibold transition shadow
           ${
             isDisabled
               ? "bg-slate-200 text-slate-500 cursor-not-allowed shadow-none"
