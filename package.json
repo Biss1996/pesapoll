@@ -2,13 +2,15 @@
   "name": "test-project",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "lint": "eslint .",
     "preview": "vite preview",
-    "server": "json-server --watch db.json --port 3001"
+    "lint": "eslint .",
+    "server": "json-server --watch data/db.json --port 3001"
   },
   "dependencies": {
     "chart.js": "^4.5.0",

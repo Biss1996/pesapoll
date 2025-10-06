@@ -1,8 +1,7 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "version": 2,
-  "rewrites": [
-    { "source": "/(.*)", "destination": "/" }
-  ],
+
   "builds": [
     {
       "src": "package.json",
@@ -12,25 +11,31 @@
       }
     }
   ],
-  "routes": [
+
+  "rewrites": [
+    { "source": "/feedback/((?!general).*)", "destination": "/api/feedback/general" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ],
+
+  "headers": [
     {
-      "src": "/sw.js",
-      "headers": {
-        "Service-Worker-Allowed": "/",
-        "Content-Type": "application/javascript"
-      }
+      "source": "/sw.js",
+      "headers": [
+        { "key": "Service-Worker-Allowed", "value": "/" },
+        { "key": "Content-Type", "value": "application/javascript" }
+      ]
     },
     {
-      "src": "/site.webmanifest",
-      "headers": {
-        "Content-Type": "application/json"
-      }
+      "source": "/site.webmanifest",
+      "headers": [
+        { "key": "Content-Type", "value": "application/json" }
+      ]
     },
     {
-      "src": "/(.*)",
-      "headers": {
-        "Cache-Control": "public, max-age=0, must-revalidate"
-      }
+      "source": "/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
     }
   ]
 }
