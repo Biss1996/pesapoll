@@ -1,16 +1,36 @@
-const { readDB } = require("./_utils");
+const fs = require("fs/promises");
+const fss = require("fs"); // sync exists checks
+const path = require("path");
 
-module.exports = async (req, res) => {
-  if (req.method !== "GET") {
-    res.setHeader("Allow", "GET");
-    return res.status(405).json({ error: "Method Not Allowed" });
+function candidates() {
+  const cwd = process.cwd();
+  const here = __dirname;
+  const arr = [
+    path.join(cwd, "data", "db.json"),
+    path.join(here, "..", "..", "data", "db.json"),
+    path.join(here, "..", "data", "db.json"),
+    path.join(here, "data", "db.json"),
+    path.resolve("data/db.json"),
+  ];
+  // De-dupe
+  return [...new Set(arr)];
+}
+
+async function resolveDbPath() {
+  const list = candidates();
+  for (const p of list) {
+    if (fss.existsSync(p)) {
+      return p;
+    }
   }
-  try {
-    const db = await readDB();
-    res.setHeader("Content-Type", "application/json; charset=utf-8");
-    return res.status(200).json(db);
-  } catch (e) {
-    console.error(e);
-    return res.status(500).json({ error: "Failed to read database" });
-  }
-};
+  const msg = `db.json not found. Checked:\n${list.join("\n")}\n__dirname=${__dirname}\ncwd=${process.cwd()}`;
+  throw new Error(msg);
+}
+
+async function readDB() {
+  const file = await resolveDbPath();
+  const raw = await fs.readFile(file, "utf8");
+  return JSON.parse(raw);
+}
+
+module.exports = { readDB, candidates };
