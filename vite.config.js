@@ -1,24 +1,25 @@
+// vite.config.js
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
 
 export default defineConfig({
-  // Ensure output directory is 'dist' (default for Vite)
   build: {
     outDir: 'dist',
   },
   plugins: [
     react(),
     VitePWA({
-      // Enable PWA in development for testing
+      // auto-update the SW and claim clients quickly
+      registerType: 'autoUpdate',
       devOptions: {
-        enabled: true,
-        type: 'module', // Use ES modules for dev SW
+        enabled: true,      // enable SW in dev only if you need to test PWA
+        type: 'module',
       },
-      // Inject manifest into index.html
-      injectManifest: {
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
-      },
+
+      // We are using the default "generateSW" strategy.
+      // (Remove injectManifest; it only applies to the "injectManifest" strategy.)
+
       manifest: {
         name: 'My React PWA',
         short_name: 'ReactPWA',
@@ -27,52 +28,50 @@ export default defineConfig({
         background_color: '#ffffff',
         theme_color: '#000000',
         icons: [
-          {
-            src: '/icon-192x192.png',
-            sizes: '192x192',
-            type: 'image/png',
-            purpose: 'any maskable', // Add purpose for maskable icons
-          },
-          {
-            src: '/icon-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-          },
+          { src: '/icon-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
+          { src: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
         ],
       },
+
       workbox: {
-        // Cache static assets (JS, CSS, images)
-        globPatterns: ['**/*.{js,css,html,ico,png,svg}'],
-        // Runtime caching for API calls
+        // Precache these static asset types
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}'],
+
+        // IMPORTANT: don't let SPA fallback hijack API routes
+        navigateFallback: '/index.html',
+        navigateFallbackDenylist: [
+          /^\/api\//, // never treat /api/* navigations as SPA pages
+          /\/.*\.(?:js|css|json|png|jpg|jpeg|gif|svg|ico|webp)$/i
+        ],
+
+        // Runtime caching rules
         runtimeCaching: [
+          // Always hit network for any API (no cache, no fallback)
           {
-            urlPattern: /^https:\/\/your-api-endpoint\/.*/i,
-            handler: 'NetworkFirst',
+            urlPattern: ({ url }) => url.pathname.startsWith('/api/'),
+            handler: 'NetworkOnly',
+            method: 'GET',
             options: {
-              cacheName: 'api-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24, // 24 hours
-              },
-              cacheableResponse: {
-                statuses: [0, 200], // Cache opaque (CORS) and OK responses
-              },
-            },
+              cacheName: 'api-no-cache'
+            }
           },
-          // Cache Google Fonts (example)
+
+          // Example: Google Fonts (keep if you actually use them)
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
             handler: 'CacheFirst',
             options: {
               cacheName: 'google-fonts-cache',
-              expiration: {
-                maxEntries: 10,
-                maxAgeSeconds: 60 * 60 * 24 * 365, // 1 year
-              },
-            },
-          },
+              expiration: { maxEntries: 10, maxAgeSeconds: 60 * 60 * 24 * 365 }
+            }
+          }
         ],
-      },
-    }),
-  ],
+
+        // Nice-to-haves
+        cleanupOutdatedCaches: true,
+        skipWaiting: true,
+        clientsClaim: true
+      }
+    })
+  ]
 });
