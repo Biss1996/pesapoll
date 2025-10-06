@@ -10,23 +10,29 @@ export default defineConfig({
   plugins: [
     react(),
     VitePWA({
-      // auto-update the SW and claim clients quickly
+      // Auto-update SW and register
       registerType: 'autoUpdate',
+
+      // Enable SW in dev ONLY if you want to test PWA locally
       devOptions: {
-        enabled: true,      // enable SW in dev only if you need to test PWA
+        enabled: true,
         type: 'module',
       },
 
-      // We are using the default "generateSW" strategy.
-      // (Remove injectManifest; it only applies to the "injectManifest" strategy.)
-
+      // Use Workbox generateSW (default)
       manifest: {
         name: 'My React PWA',
         short_name: 'ReactPWA',
         start_url: '/',
+        scope: '/',
         display: 'standalone',
         background_color: '#ffffff',
         theme_color: '#000000',
+
+        // ✅ helps "Open App" launch/focus the installed app (Chromium)
+        capture_links: 'existing-client-navigate',
+        launch_handler: { client_mode: 'focus-existing' },
+
         icons: [
           { src: '/icon-192x192.png', sizes: '192x192', type: 'image/png', purpose: 'any maskable' },
           { src: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
@@ -34,29 +40,26 @@ export default defineConfig({
       },
 
       workbox: {
-        // Precache these static asset types
-        globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest}'],
+        // Precache typical static assets
+        globPatterns: ['**/*.{js,css,html,ico,png,svg,webmanifest,gif,jpg,jpeg,webp}'],
 
-        // IMPORTANT: don't let SPA fallback hijack API routes
+        // SPA fallback, but NEVER for API or file requests
         navigateFallback: '/index.html',
         navigateFallbackDenylist: [
-          /^\/api\//, // never treat /api/* navigations as SPA pages
-          /\/.*\.(?:js|css|json|png|jpg|jpeg|gif|svg|ico|webp)$/i
+          /^\/api\//,
+          /\/.*\.(?:js|css|json|png|jpg|jpeg|gif|svg|ico|webp|txt|map)$/i
         ],
 
         // Runtime caching rules
         runtimeCaching: [
-          // Always hit network for any API (no cache, no fallback)
+          // Always go to the network for API (no cache)
           {
             urlPattern: ({ url }) => url.pathname.startsWith('/api/'),
             handler: 'NetworkOnly',
             method: 'GET',
-            options: {
-              cacheName: 'api-no-cache'
-            }
+            options: { cacheName: 'api-no-cache' }
           },
-
-          // Example: Google Fonts (keep if you actually use them)
+          // (optional) Google Fonts
           {
             urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
             handler: 'CacheFirst',
@@ -67,7 +70,7 @@ export default defineConfig({
           }
         ],
 
-        // Nice-to-haves
+        // Good defaults
         cleanupOutdatedCaches: true,
         skipWaiting: true,
         clientsClaim: true
