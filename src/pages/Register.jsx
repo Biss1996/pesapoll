@@ -2,18 +2,26 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-/** OPTION A (no backend): keep API_BASE = null */
+/** OPTION A (no external DB): keep API_BASE = null.
+ * We seed localStorage from the serverless mock API (/api/mock).
+ */
 const API_BASE = null;
-
-// Absolute URL for /public/db.json
-const DB_URL =
-  typeof document !== "undefined"
-    ? new URL("db.json", document.baseURI).toString()
-    : "/db.json";
 
 const USERS_KEY = "app:users";
 const USER_KEY  = "app:user";
-const REDIRECT_TO = "/login"; // change to "/login" if you prefer
+const REDIRECT_TO = "/login"; // change to "/surveys" if you prefer
+
+// Serverless mock API
+const API_ROOT  = "/api/mock";
+const USERS_URL = `${API_ROOT}/users`;
+
+async function fetchJson(url) {
+  const res = await fetch(url, { headers: { Accept: "application/json" } });
+  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+  const ct = res.headers.get("content-type") || "";
+  if (!ct.includes("application/json")) throw new Error(`Not JSON from ${url}`);
+  return res.json();
+}
 
 export default function Register() {
   const navigate = useNavigate();
@@ -40,9 +48,10 @@ export default function Register() {
     localStorage.setItem(USERS_KEY, JSON.stringify(list));
   }
 
-  // Seed users from /db.json if empty
+  // Seed users from API if empty (first load)
   useEffect(() => {
-    if (API_BASE) return;
+    if (API_BASE) return; // skip if you later wire a real backend
+
     try {
       const existing = getLocalUsers();
       if (existing.length > 0) {
@@ -50,13 +59,17 @@ export default function Register() {
         return;
       }
     } catch {}
+
     (async () => {
       try {
-        const res = await fetch(DB_URL);
-        if (!res.ok) throw new Error("Failed to load db.json");
-        const data = await res.json();
-        const initialUsers = Array.isArray(data?.users) ? data.users : [];
-        setLocalUsers(initialUsers);
+        // Try collection endpoint first
+        let users = await fetchJson(USERS_URL).catch(async () => {
+          // Fallback: hit /api/mock and read .users
+          const db = await fetchJson(API_ROOT);
+          return Array.isArray(db?.users) ? db.users : [];
+        });
+        if (!Array.isArray(users)) users = [];
+        setLocalUsers(users);
       } catch {
         setLocalUsers([]);
       } finally {
@@ -95,8 +108,8 @@ export default function Register() {
       const referral = form.referral.trim() || null;
 
       if (API_BASE) {
-        // Backend mode (unused in Option A)
-        // ...
+        // Backend mode (not used in Option A)
+        // await fetch(`${API_BASE}/register`, { method: 'POST', body: JSON.stringify(...) })
       } else {
         if (!seeded) throw new Error("Still initializing, try again.");
         const users = getLocalUsers();
@@ -109,7 +122,7 @@ export default function Register() {
           id: crypto?.randomUUID?.() || String(Date.now()),
           name: form.name.trim(),
           email,
-          password: form.password, // demo only (do NOT do this in prod)
+          password: form.password, // demo only (don’t store plain text in real apps)
           referral,
           plan: "free",
           balance: 0,
@@ -117,7 +130,7 @@ export default function Register() {
         };
         setLocalUsers([...users, newUser]);
 
-        // ✅ Persist session so Dashboard shows the user (not Guest)
+        // Persist session so Dashboard shows the user (not Guest)
         const session = {
           id: newUser.id,
           name: newUser.name,

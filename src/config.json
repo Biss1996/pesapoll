@@ -1,3 +1,7 @@
 {
-  "api_url": "/db.json"
+  "api_url": "/api/mock",
+  "routes": {
+    "surveys": "/api/mock/surveys",
+    "users": "/api/mock/users"
+  }
 }

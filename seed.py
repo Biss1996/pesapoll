@@ -680,7 +680,7 @@ for base in (here, here.parent, here.parent.parent):
 else:
     root = here  # fallback: create public/ here if missing
 
-out_path = root / "public" / "db.json"
+out_path = root / "data" / "db.json"
 out_path.parent.mkdir(parents=True, exist_ok=True)
 
 payload = {

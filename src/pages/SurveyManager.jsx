@@ -3,8 +3,17 @@ import { useEffect, useState } from "react";
 import { useAdmin } from "../context/AdminContext";
 import AdminLogin from "./AdminLogin";
 
-const API_BASE = import.meta.env.BASE_URL || "/";   // base path of your app
-const SURVEYS_URL = `${API_BASE.replace(/\/+$/, "")}/db.json`;
+const API_ROOT = "/api/mock";
+const SURVEYS_URL = `${API_ROOT}/surveys`;
+
+async function fetchJson(url, opts) {
+  const res = await fetch(url, { headers: { Accept: "application/json" }, ...opts });
+  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+  const ct = res.headers.get("content-type") || "";
+  if (!ct.includes("application/json")) throw new Error(`Not JSON from ${url}`);
+  return res.json();
+}
+
 export default function SurveyManager() {
   const { isAdmin } = useAdmin();
   if (!isAdmin) return <AdminLogin />;
@@ -16,9 +25,13 @@ export default function SurveyManager() {
   useEffect(() => {
     (async () => {
       try {
-        const res = await fetch(SURVEYS_URL);
-        const data = await res.json();
-        setSurveys(Array.isArray(data) ? data : []);
+        // Try collection endpoint first
+        let list = await fetchJson(SURVEYS_URL).catch(async () => {
+          // Fallback to full DB at /api/mock then pick .surveys
+          const db = await fetchJson(API_ROOT);
+          return Array.isArray(db?.surveys) ? db.surveys : [];
+        });
+        setSurveys(Array.isArray(list) ? list : []);
       } catch (e) {
         console.error("Error fetching surveys:", e);
         alert("Failed to fetch surveys");
@@ -71,27 +84,34 @@ export default function SurveyManager() {
       const updated = surveys.find((s) => s.id === id);
       const res = await fetch(`${SURVEYS_URL}/${id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify({ ...updated, updatedAt: Date.now() }),
       });
+
+      const ct = res.headers.get("content-type") || "";
+      if (!res.ok || !ct.includes("application/json")) {
+        throw new Error("Read-only backend or invalid response");
+      }
+
       const data = await res.json();
       setSurveys((prev) => prev.map((s) => (s.id === id ? data : s)));
       alert("Survey updated!");
     } catch (e) {
       console.error("Failed to update survey:", e);
-      alert("Failed to update survey");
+      alert("Failed to update survey (read-only mock in production).");
     }
   };
 
   const deleteSurvey = async (id) => {
     if (!confirm("Delete this survey? This cannot be undone.")) return;
     try {
-      await fetch(`${SURVEYS_URL}/${id}`, { method: "DELETE" });
+      const res = await fetch(`${SURVEYS_URL}/${id}`, { method: "DELETE" });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
       setSurveys((prev) => prev.filter((s) => s.id !== id));
       alert("Survey deleted");
     } catch (e) {
       console.error("Failed to delete survey:", e);
-      alert("Failed to delete survey");
+      alert("Failed to delete survey (read-only mock in production).");
     }
   };
 

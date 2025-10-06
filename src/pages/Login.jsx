@@ -6,11 +6,17 @@ const USERS_KEY = "app:users";
 const USER_KEY  = "app:user";
 const SURVEYS_ROUTE = "/surveys";
 
-// Absolute URL for /public/db.json (for first-time seeding if needed)
-const DB_URL =
-  typeof document !== "undefined"
-    ? new URL("db.json", document.baseURI).toString()
-    : "/db.json";
+// API base (prod = Vercel functions, dev = Vite proxy/json-server)
+const API_ROOT = "/api/mock";
+const USERS_URL = `${API_ROOT}/users`;
+
+async function fetchJson(url) {
+  const res = await fetch(url, { headers: { Accept: "application/json" } });
+  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+  const ct = res.headers.get("content-type") || "";
+  if (!ct.includes("application/json")) throw new Error(`Not JSON from ${url}`);
+  return res.json();
+}
 
 export default function Login() {
   const navigate = useNavigate();
@@ -21,7 +27,7 @@ export default function Login() {
   const [submitting, setSubmitting] = useState(false);
   const [seeded, setSeeded] = useState(false);
 
-  // Ensure local users are seeded (first load only)
+  // Seed local users from API on first load
   useEffect(() => {
     try {
       const existing = JSON.parse(localStorage.getItem(USERS_KEY) || "[]");
@@ -30,12 +36,18 @@ export default function Login() {
         return;
       }
     } catch {}
+
     (async () => {
       try {
-        const res = await fetch(DB_URL);
-        const data = await res.json();
-        const initialUsers = Array.isArray(data?.users) ? data.users : [];
-        localStorage.setItem(USERS_KEY, JSON.stringify(initialUsers));
+        // Try collection endpoint first
+        let users = await fetchJson(USERS_URL).catch(async () => {
+          // Fallback to whole DB: /api/mock then .users
+          const db = await fetchJson(API_ROOT);
+          return Array.isArray(db?.users) ? db.users : [];
+        });
+
+        if (!Array.isArray(users)) users = [];
+        localStorage.setItem(USERS_KEY, JSON.stringify(users));
       } catch {
         localStorage.setItem(USERS_KEY, JSON.stringify([]));
       } finally {
@@ -79,7 +91,7 @@ export default function Login() {
       if (!found) {
         setServerErr("Invalid email or password.");
       } else {
-        // Persist session (normalize minimal shape)
+        // Persist session
         const session = {
           id: found.id,
           name: found.name || "",

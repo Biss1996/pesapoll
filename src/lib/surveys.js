@@ -1,13 +1,12 @@
 // src/lib/surveys.js
-const SURVEYS_VERSION_KEY = "surveys:version";
-const DB_URL = (() => {
-  const base = (import.meta?.env?.BASE_URL ?? "/").toString();
-  const normBase = (base.startsWith("/") ? base : `/${base}`).replace(/\/+$/, "");
-  return `${normBase}/db.json`; // -> "/db.json" or "/subpath/db.json"
-})();
 
+const SURVEYS_VERSION_KEY = "surveys:version";
 export const USER_KEY = "app:user";
 const COMPLETIONS_KEY = "surveys.completions.v1"; // { [userId]: { [surveyId]: { answers, completedAt } } }
+
+/* ---------- API endpoints (prod = Vercel functions, dev = Vite proxy) ---------- */
+const API_ROOT = "/api/mock";
+const SURVEYS_URL = `${API_ROOT}/surveys`;
 
 /* ---------------- user helpers ---------------- */
 export function getUser() {
@@ -16,7 +15,7 @@ export function getUser() {
     if (u && u.id) return u;
   } catch {}
   const fresh = {
-    id: crypto?.randomUUID?.() || String(Date.now()),
+    id: (globalThis.crypto?.randomUUID?.() || String(Date.now())),
     name: "Guest",
     email: "",
     plan: "free",
@@ -90,39 +89,46 @@ export function ensureNotCompleted(surveyId) {
   }
 }
 
-/* ---------------- db.json loader ---------------- */
+/* ---------------- API loader (replaces old /db.json) ---------------- */
+async function fetchJson(url) {
+  const bust = url.includes("?") ? `${url}&_=${Date.now()}` : `${url}?_=${Date.now()}`;
+  const res = await fetch(bust, { cache: "no-store", headers: { Accept: "application/json" } });
+  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+  const ct = res.headers.get("content-type") || "";
+  if (!ct.includes("application/json")) throw new Error(`Not JSON from ${url}`);
+  return res.json();
+}
+
 let _dbCache = null;
+/**
+ * Loads surveys from the API. Tries /api/mock/surveys first, then falls back
+ * to /api/mock and returns an object shaped like { surveys: [...] }.
+ */
 export async function loadDB() {
   if (_dbCache) return _dbCache;
 
-  // Avoid stale caching during dev
-  const url = DB_URL.includes("?")
-    ? `${DB_URL}&_=${Date.now()}`
-    : `${DB_URL}?_=${Date.now()}`;
+  // Fast path: collection endpoint
+  try {
+    const list = await fetchJson(SURVEYS_URL);
+    _dbCache = { surveys: Array.isArray(list) ? list : [] };
+    return _dbCache;
+  } catch {
+    // Fall through to full DB
+  }
 
-  const res = await fetch(url, { cache: "no-store" });
-  if (!res.ok) throw new Error("Failed to load db.json");
-  _dbCache = await res.json();
+  // Fallback: full DB
+  const db = await fetchJson(API_ROOT).catch(() => ({}));
+  _dbCache = {
+    surveys: Array.isArray(db?.surveys) ? db.surveys : [],
+    ...db,
+  };
   return _dbCache;
 }
 
 /* ---------------- mapping for UI ---------------- */
 /**
- * Hydrate surveys from db.json and tag per-user completion.
- * - Keeps all surveys visible
- * - Adds completion/lock metadata for UI to disable retakes
- *
- * Maps:
- *  - db.name        -> title
- *  - db.items       -> questions (array)
- *  - db.payout      -> reward
- *  - db.currency    -> currency
- * Adds:
- *  - questionsCount
- *  - completed (per user)
- *  - status: "completed" | "available"
- *  - locked: boolean (true if completed)
- *  - retakeBlockedReason: string | null
+ * Hydrate surveys for UI and tag per-user completion.
+ * Adds both `payout` and `reward` for compatibility with existing components.
  */
 export async function listSurveysForUser() {
   const user = getUser();
@@ -139,13 +145,16 @@ export async function listSurveysForUser() {
 
     const isCompleted = completed.has(s.id);
 
+    const payout = Number.isFinite(s.payout) ? s.payout : (Number.isFinite(s.reward) ? s.reward : 0);
+
     return {
       id: s.id,
       title: s.name || s.title || "Survey",
       name: s.name,
       description: s.description || "",
       premium: !!s.premium,
-      reward: s.payout,
+      payout,              // keep for components expecting `payout`
+      reward: payout,      // and keep `reward` for old callers
       currency: (s.currency || "ksh").toLowerCase(),
       questions: Array.isArray(s.items) ? s.items : Array.isArray(s.questions) ? s.questions : [],
       questionsCount: count,

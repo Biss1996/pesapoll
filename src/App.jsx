@@ -1,3 +1,4 @@
+// src/App.jsx
 import { Route, Routes, Navigate } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -12,12 +13,12 @@ import Register from "./pages/Register";
 import Packages from "./pages/Packages";
 import Dashboard from "./pages/Dashboard";
 import Login from "./pages/Login";
-import InstallPWA from './components/InstallPWA';
+import InstallPWA from "./components/InstallPWA";
 import AddSurvey from "./pages/AddSurvey";
 import SurveyManager from "./pages/SurveyManager";
 import AdminLogin from "./pages/AdminLogin";
 
-/* --- tiny guard so some routes require a signed-in user --- */
+/* --- guard: some routes require a signed-in user --- */
 function isSignedIn() {
   try {
     const u = JSON.parse(localStorage.getItem("app:user") || "null");
@@ -29,9 +30,11 @@ function isSignedIn() {
 function ProtectedRoute({ children }) {
   return isSignedIn() ? children : <Navigate to="/login" replace />;
 }
-/* --- API base: for Option A this reads static /db.json --- */
-const API_BASE = import.meta.env.BASE_URL || "/";
-const SURVEYS_URL = `${API_BASE.replace(/\/+$/, "")}/db.json`;
+
+/* ---------- API base (dev via Vite proxy, prod on Vercel) ---------- */
+const API_ROOT = "/api/mock";
+const SURVEYS_URL = `${API_ROOT}/surveys`;
+
 /* ---------- Randomized "Withdrawal" toast helpers ---------- */
 const kesFmt = new Intl.NumberFormat("en-KE", {
   style: "currency",
@@ -65,9 +68,9 @@ function pushRandomWithdrawalToast() {
       <div className="text-slate-900 font-bold">Withdrawal</div>
       <div className="mt-1 text-slate-700">
         <span className="font-mono tracking-tight">{msisdn}</span> has withdrawn{" "}
-        <span className="font-semibold">{kesFmt.format(amount)}</span>.{" "}
-        New balance: <span className="font-semibold">{kesFmt.format(balance)}</span>.{" "}
-        Ref. <span className="font-mono">{ref}</span>
+        <span className="font-semibold">{kesFmt.format(amount)}</span>. New balance:{" "}
+        <span className="font-semibold">{kesFmt.format(balance)}</span>. Ref.{" "}
+        <span className="font-mono">{ref}</span>
       </div>
     </div>,
     {
@@ -84,16 +87,81 @@ function App() {
   const [surveysAdmin, setSurveysAdmin] = useState([]);
   const { isAdmin } = useAdmin();
 
+  /* ---------- Safe JSON fetch helper ----------
+     - cache-busts & sets no-store to avoid SW
+     - parses JSON even if header missing
+     - logs small response preview for debugging
+  -------------------------------------------- */
+  async function fetchJson(url) {
+    const withBust = url.includes("?") ? `${url}&_=${Date.now()}` : `${url}?_=${Date.now()}`;
+    const res = await fetch(withBust, {
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+    });
+
+    const body = await res.text();
+    const ct = (res.headers.get("content-type") || "").toLowerCase();
+
+    if (!res.ok) {
+      console.error("HTTP error", {
+        url: res.url,
+        status: res.status,
+        ct,
+        preview: body.slice(0, 200),
+      });
+      throw new Error(`HTTP ${res.status}`);
+    }
+
+    if (ct.includes("json")) {
+      try {
+        return JSON.parse(body);
+      } catch (e) {
+        console.warn("JSON header present but parse failed, trying salvage:", e);
+      }
+    }
+
+    const trimmed = body.trim();
+    if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+      try {
+        return JSON.parse(trimmed);
+      } catch (e) {
+        console.error("Salvage parse failed", { url: res.url, preview: trimmed.slice(0, 200) });
+      }
+    }
+
+    console.error("Non-JSON response", { url: res.url, ct, preview: body.slice(0, 200) });
+    throw new Error("Not JSON");
+  }
+
+  /* ---------- Load surveys (collection first, then fallback to full DB) ---------- */
   useEffect(() => {
-    fetch(SURVEYS_URL)
-      .then((res) => res.json())
-      .then((data) => {
-        const list = Array.isArray(data) ? data : Array.isArray(data?.surveys) ? data.surveys : [];
+    (async () => {
+      try {
+        let list = [];
+
+        // Try the collection endpoint first
+        try {
+          const data = await fetchJson(SURVEYS_URL);
+          list = Array.isArray(data) ? data : Array.isArray(data?.surveys) ? data.surveys : [];
+        } catch (e) {
+          console.warn("Primary /surveys fetch failed, attempting /api/mock fallback:", e);
+        }
+
+        // Fallback to whole DB at /api/mock
+        if (!Array.isArray(list) || list.length === 0) {
+          const db = await fetchJson(API_ROOT);
+          list = Array.isArray(db?.surveys) ? db.surveys : [];
+        }
+
         setSurveysAdmin(list);
-      })
-      .catch(() => toast.error("Failed to fetch surveys"));
+      } catch (err) {
+        console.error("Fetch surveys failed:", err);
+        toast.error("Failed to fetch surveys");
+      }
+    })();
   }, []);
 
+  /* ---------- Fun ticker for random toasts ---------- */
   const startedRef = useRef(false);
   useEffect(() => {
     if (startedRef.current) return;
@@ -107,13 +175,16 @@ function App() {
     return () => clearInterval(id);
   }, []);
 
+  /* ---------- Admin actions (read-only on mock in prod) ---------- */
   async function addSurvey(newSurvey) {
     try {
       const res = await fetch(SURVEYS_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(newSurvey),
       });
+      const ct = res.headers.get("content-type") || "";
+      if (!res.ok || !ct.includes("application/json")) throw new Error("Not JSON");
       const data = await res.json();
       setSurveysAdmin((prev) => [data, ...prev]);
       toast.success("Survey added successfully");
@@ -126,9 +197,11 @@ function App() {
     try {
       const res = await fetch(`${SURVEYS_URL}/${updatedSurvey.id}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(updatedSurvey),
       });
+      const ct = res.headers.get("content-type") || "";
+      if (!res.ok || !ct.includes("application/json")) throw new Error("Not JSON");
       const data = await res.json();
       setSurveysAdmin((prev) => prev.map((s) => (s.id === data.id ? data : s)));
       toast.success("Survey updated successfully");
@@ -151,8 +224,24 @@ function App() {
           <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/add-survey" element={isAdmin ? <AddSurvey addSurvey={addSurvey} /> : <Navigate to="/admin-login" replace />} />
-          <Route path="/surveys/manage" element={isAdmin ? <SurveyManager surveys={surveysAdmin} updateSurvey={updateSurvey} setSurveys={setSurveysAdmin} /> : <Navigate to="/admin-login" replace />} />
+          <Route
+            path="/add-survey"
+            element={isAdmin ? <AddSurvey addSurvey={addSurvey} /> : <Navigate to="/admin-login" replace />}
+          />
+          <Route
+            path="/surveys/manage"
+            element={
+              isAdmin ? (
+                <SurveyManager
+                  surveys={surveysAdmin}
+                  updateSurvey={updateSurvey}
+                  setSurveys={setSurveysAdmin}
+                />
+              ) : (
+                <Navigate to="/admin-login" replace />
+              )
+            }
+          />
           <Route path="/admin-login" element={<AdminLogin />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>

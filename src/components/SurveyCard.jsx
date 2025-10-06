@@ -1,20 +1,29 @@
-// src/components/SurveyCard.jsx
 import { useMemo, useEffect, useState } from "react";
 
-const DB_URL =
-  typeof document !== "undefined"
-    ? new URL("db.json", document.baseURI).toString()
-    : "/db.json";
+/* ---- API (prod = Vercel functions, dev = Vite proxy/json-server if configured) ---- */
+const API_ROOT = "/api/mock";
+const CATALOG_URL = `${API_ROOT}/surveys`;
+
+async function fetchJson(url) {
+  const res = await fetch(url, { headers: { Accept: "application/json" } });
+  if (!res.ok) throw new Error(`HTTP ${res.status} for ${url}`);
+  const ct = res.headers.get("content-type") || "";
+  if (!ct.includes("application/json")) throw new Error(`Not JSON from ${url}`);
+  return res.json();
+}
 
 let catalogPromise = null;
 function loadCatalog() {
   if (!catalogPromise) {
-    catalogPromise = fetch(DB_URL)
-      .then((r) => {
-        if (!r.ok) throw new Error("Failed to load db.json");
-        return r.json();
+    catalogPromise = fetchJson(CATALOG_URL)
+      .catch(async () => {
+        // Fallback to whole DB at /api/mock, then pick .surveys
+        const db = await fetchJson(API_ROOT);
+        return Array.isArray(db?.surveys) ? db.surveys : [];
       })
-      .then((d) => (Array.isArray(d?.surveys) ? d.surveys : d));
+      .then((list) =>
+        Array.isArray(list) ? list : Array.isArray(list?.surveys) ? list.surveys : []
+      );
   }
   return catalogPromise;
 }
@@ -36,7 +45,7 @@ export default function SurveyCard({ survey, onStart }) {
   const [fallback, setFallback] = useState(null);
 
   useEffect(() => {
-    const needPayout = !(Number.isFinite(payout));
+    const needPayout = !Number.isFinite(payout);
     const haveQ =
       Array.isArray(questions) ||
       typeof qc === "number" ||
@@ -64,8 +73,9 @@ export default function SurveyCard({ survey, onStart }) {
     if (typeof questions === "number") return questions;
     if (Array.isArray(survey?.items)) return survey.items.length;
     if (Array.isArray(fallback?.items)) return fallback.items.length;
+    if (Array.isArray(fallback?.questions)) return fallback.questions.length;
     return 0;
-  }, [questions, qc, survey?.items, fallback?.items]);
+  }, [questions, qc, survey?.items, fallback?.items, fallback?.questions]);
 
   const effectivePayout = useMemo(() => {
     if (Number.isFinite(payout)) return payout;
@@ -157,7 +167,7 @@ export default function SurveyCard({ survey, onStart }) {
         type="button"
         onClick={handleClick}
         disabled={isDisabled}
-        className={`shrink-1 absolute-bottom-right  rounded-full px-1 py-1 font-semibold transition shadow
+        className={`shrink-1 absolute-bottom-right rounded-full px-1 py-1 font-semibold transition shadow
           ${
             isDisabled
               ? "bg-slate-200 text-slate-500 cursor-not-allowed shadow-none"
