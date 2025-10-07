@@ -45,12 +45,15 @@ export default function Navbar() {
     <header className="sticky top-0 z-50 border-b bg-white/80 backdrop-blur supports-[backdrop-filter]:bg-white/60">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
         {/* Brand */}
-        <Link to="/" className="inline-flex items-center gap-2">
-          <span className="h-9 w-9 grid place-items-center rounded-xl bg-indigo-600 text-white font-bold">
-            A
-          </span>
-          <span className="text-lg font-semibold tracking-tight">PesaPoll Survey</span>
-        </Link>
+<Link to="/" className="inline-flex items-center gap-2">
+  <img
+    src="/icon-192x192.png"
+    alt="PesaPoll icon"
+    className="h-9 w-9 rounded-xl object-cover"
+  />
+  <span className="text-lg font-semibold tracking-tight">PesaPoll Survey</span>
+</Link>
+
 
         {/* Desktop nav */}
         <nav className="hidden sm:flex items-center gap-6 text-sm">

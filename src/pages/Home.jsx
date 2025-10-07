@@ -3,78 +3,76 @@ import React from "react";
 export default function Home() {
   return (
     <>
-      {/* Hero */}
-      <section className="bg-indigo-50">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 lg:py-20 text-center">
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-slate-900">
-            Start Earning with PesaPoll Survey
-          </h1>
-          <p className="mt-3 text-slate-600 text-base sm:text-lg">
-            Join 50,000+ users earning real money daily
-          </p>
+      {/* Hero Section with Image */}
+<section className="bg-indigo-50">
+  <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-14 lg:py-20 text-center bg-[url('/hero-celebration.jpg')] bg-cover sm:bg-contain bg-center sm:bg-top rounded-2xl relative">
+    {/* Overlay for better text readability */}
+    <div className="absolute inset-0 bg-black/30 rounded-2xl"></div>
 
-          <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-            <a
-              href="/register"
-              className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl bg-indigo-600 px-5 py-3 text-white font-semibold shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            >
-              Start Earning Now
-            </a>
-            <a
-              href="/login"
-              className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl border border-slate-300 px-5 py-3 font-semibold text-slate-700 hover:bg-white shadow-sm"
-            >
-              Already a Member? Login
-            </a>
-          </div>
+    {/* Content */}
+    <div className="relative z-10">
+      <h1 className="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-white">
+        Start Earning with PesaPoll Survey
+      </h1>
+      <p className="mt-3 text-white text-base sm:text-lg">
+        Join 50,000+ users earning real money daily
+      </p>
+      <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
+        <a
+          href="/register"
+          className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl bg-indigo-600 px-5 py-3 text-white font-semibold shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          Start Earning Now
+        </a>
+        <a
+          href="/login"
+          className="w-full sm:w-auto inline-flex items-center justify-center rounded-2xl border border-slate-300 px-5 py-3 font-semibold text-white hover:bg-white hover:text-slate-700 shadow-sm"
+        >
+          Already a Member? Login
+        </a>
+      </div>
+      <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-white">
+        <li className="inline-flex items-center gap-2"><Check /> Free to join</li>
+        <li className="inline-flex items-center gap-2"><Check /> Instant payouts</li>
+        <li className="inline-flex items-center gap-2"><Check /> No experience needed</li>
+      </ul>
+      <dl className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <Stat value="50K+" label="Active Users" />
+        <Stat value="$2M+" label="Total Payouts" />
+        <Stat
+          value={
+            <span>
+              4.9<span className="text-yellow-400">★</span>
+            </span>
+          }
+          label="User Rating"
+        />
+      </dl>
+    </div>
+  </div>
+</section>
 
-          <ul className="mt-6 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-slate-600">
-            <li className="inline-flex items-center gap-2"><Check /> Free to join</li>
-            <li className="inline-flex items-center gap-2"><Check /> Instant payouts</li>
-            <li className="inline-flex items-center gap-2"><Check /> No experience needed</li>
-          </ul>
 
-          <dl className="mt-10 grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Stat value="50K+" label="Active Users" />
-            <Stat value="$2M+" label="Total Payouts" />
-            <Stat
-              value={
-                <span>
-                  4.9<span className="text-yellow-400">★</span>
-                </span>
-              }
-              label="User Rating"
-            />
-          </dl>
-        </div>
-      </section>
-
-      {/* Why Choose */}
+      {/* Why Choose Section */}
       <section id="features" className="py-14 lg:py-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-center text-indigo-600 text-2xl sm:text-3xl font-extrabold tracking-tight">
             Why Choose PesaPoll Survey?
           </h2>
-
           <div className="mt-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-  <Feature icon={<Dollar />} title={<span className="text-green-600">High Paying Surveys</span>} desc="Earn Kes 50 – Kes 100 per survey, among the best rates in the industry." />
-  <Feature icon={<Users />} title={<span className="text-green-600">Referral Commission</span>} desc="Earn lifetime commissions from your referrals." />
-  <Feature icon={<Zap />} title={<span className="text-green-600">Instant Payouts</span>} desc="Get paid to M-Pesa within 24 hours—no waiting." />
-  <Feature icon={<NoThreshold />} title={<span className="text-green-600">No Minimum Threshold</span>} desc="Withdraw any amount, anytime." />
-  <Feature icon={<Shield />} title={<span className="text-green-600">100% Legitimate</span>} desc="Trusted by 50,000+ users worldwide." />
-  <Feature icon={<Star />} title={<span className="text-green-600">4.9★ Rating</span>} desc="Rated excellent by our community." />
-</div>
-
+            <Feature icon={<Dollar />} title={<span className="text-green-600">High Paying Surveys</span>} desc="Earn Kes 50 – Kes 100 per survey, among the best rates in the industry." />
+            <Feature icon={<Users />} title={<span className="text-green-600">Referral Commission</span>} desc="Earn lifetime commissions from your referrals." />
+            <Feature icon={<Zap />} title={<span className="text-green-600">Instant Payouts</span>} desc="Get paid to M-Pesa within 24 hours—no waiting." />
+            <Feature icon={<NoThreshold />} title={<span className="text-green-600">No Minimum Threshold</span>} desc="Withdraw any amount, anytime." />
+            <Feature icon={<Shield />} title={<span className="text-green-600">100% Legitimate</span>} desc="Trusted by 50,000+ users worldwide." />
+            <Feature icon={<Star />} title={<span className="text-green-600">4.9★ Rating</span>} desc="Rated excellent by our community." />
+          </div>
         </div>
       </section>
 
-      {/* Success Stories */}
+      {/* Success Stories Section with Images */}
       <section id="stories" className="relative py-16 sm:py-20">
-        {/* soft gradient glow */}
-        <div
-          className="pointer-events-none absolute inset-x-0 -top-12 h-40 -z-10 bg-gradient-to-r from-indigo-100/70 via-fuchsia-100/60 to-sky-100/70 blur-2xl"
-          aria-hidden="true"
-        />
+        <div className="pointer-events-none absolute inset-x-0 -top-12 h-40 -z-10 bg-gradient-to-r from-indigo-100/70 via-fuchsia-100/60 to-sky-100/70 blur-2xl" aria-hidden="true" />
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <span className="inline-flex items-center rounded-full bg-indigo-50 px-3 py-1 text-xs font-semibold text-indigo-700 ring-1 ring-indigo-200">
@@ -87,7 +85,6 @@ export default function Home() {
               What members in Kenya say about PesaPoll Survey.
             </p>
           </div>
-
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {/* Card 1 */}
             <div className="group relative overflow-hidden rounded-2xl bg-white/90 p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg">
@@ -102,8 +99,12 @@ export default function Home() {
                 amount="Kes 2,000"
                 quote="PesaPoll Survey changed my life! I earn 2000+ shillings weekly doing easy surveys."
               />
+              <img
+                src="/happy-survey-completion.jpg"
+                alt="Happy survey completion"
+                className="mt-4 w-full rounded-lg"
+              />
             </div>
-
             {/* Card 2 */}
             <div className="group relative overflow-hidden rounded-2xl bg-white/90 p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg">
               <div className="absolute inset-x-0 top-0 h-1.5 rounded-t-2xl bg-gradient-to-r from-indigo-600 via-fuchsia-500 to-sky-500" />
@@ -114,12 +115,15 @@ export default function Home() {
               <Testimonial
                 name="John Kinyua"
                 nameClassName="text-green-600"
-
                 amount="Kes 4,500"
                 quote="I'm so glad I found this. The extra income has helped me pay my bills!"
               />
+              <img
+                src="/survey-payment-notification.jpg"
+                alt="Survey payment notification"
+                className="mt-4 w-full rounded-lg"
+              />
             </div>
-
             {/* Card 3 */}
             <div className="group relative overflow-hidden rounded-2xl bg-white/90 p-6 shadow-sm ring-1 ring-slate-200 transition hover:-translate-y-0.5 hover:shadow-lg">
               <div className="absolute inset-x-0 top-0 h-1.5 rounded-t-2xl bg-gradient-to-r from-indigo-600 via-fuchsia-500 to-sky-500" />
@@ -132,6 +136,11 @@ export default function Home() {
                 nameClassName="text-green-600"
                 amount="Kes 3,000"
                 quote="As a student, this is perfect. I work whenever I want and get paid instantly!"
+              />
+              <img
+                src="/group-celebrating-payments.jpg"
+                alt="Group celebrating survey payments"
+                className="mt-4 w-full rounded-lg"
               />
             </div>
           </div>
@@ -154,7 +163,7 @@ export default function Home() {
   );
 }
 
-/* ——— Small UI building blocks ——— */
+// --- Small UI building blocks ---
 function Stat({ value, label }) {
   return (
     <div className="rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 p-6 text-center">
@@ -163,6 +172,7 @@ function Stat({ value, label }) {
     </div>
   );
 }
+
 function Feature({ icon, title, desc }) {
   return (
     <div className="rounded-2xl bg-white p-6 shadow-sm ring-1 ring-slate-200">
@@ -182,7 +192,6 @@ function Testimonial({ name, amount, quote, nameClassName = "text-slate-900" }) 
   const parts = full.trim().split(/\s+/);
   const initials =
     (parts[0]?.[0] ?? "") + (parts.length > 1 ? (parts[parts.length - 1]?.[0] ?? "") : "");
-
   return (
     <figure>
       <div className="flex items-center gap-3">
@@ -199,7 +208,7 @@ function Testimonial({ name, amount, quote, nameClassName = "text-slate-900" }) 
   );
 }
 
-/* ——— Tiny inline icons ——— */
+// --- Tiny inline icons ---
 function Check() {
   return (
     <svg viewBox="0 0 20 20" fill="currentColor" aria-hidden className="h-4 w-4 text-emerald-600">
@@ -207,6 +216,7 @@ function Check() {
     </svg>
   );
 }
+
 function Dollar() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
@@ -214,6 +224,7 @@ function Dollar() {
     </svg>
   );
 }
+
 function Users() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
@@ -224,6 +235,7 @@ function Users() {
     </svg>
   );
 }
+
 function Zap() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
@@ -231,6 +243,7 @@ function Zap() {
     </svg>
   );
 }
+
 function NoThreshold() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
@@ -239,6 +252,7 @@ function NoThreshold() {
     </svg>
   );
 }
+
 function Shield() {
   return (
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="h-5 w-5">
@@ -247,6 +261,7 @@ function Shield() {
     </svg>
   );
 }
+
 function Star() {
   return (
     <svg viewBox="0 0 24 24" fill="currentColor" className="h-5 w-5">
