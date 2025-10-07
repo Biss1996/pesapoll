@@ -170,7 +170,7 @@
   "surveys": [
     {
       "id": "atta",
-      "name": "AttaPoll Survey",
+      "name": "PesaPoll Survey",
       "payout": 70,
       "currency": "ksh",
       "premium": false,
