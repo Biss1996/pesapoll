@@ -171,7 +171,7 @@ function App() {
         pushRandomWithdrawalToast();
       }
     };
-    const id = setInterval(tick, 15000);
+    const id = setInterval(tick, 30000);
     return () => clearInterval(id);
   }, []);
 
